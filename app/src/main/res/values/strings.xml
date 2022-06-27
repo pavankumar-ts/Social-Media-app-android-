@@ -15,4 +15,11 @@
     <string name="title_notifications">Notifications</string>
     <string name="post">Post</string>
     <string name="profile">Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="dp">dp</string>
+    <string name="add_dp">add DP</string>
+    <string name="bio">Bio</string>
+    <string name="dob">DOB</string>
+    <string name="name">Name</string>
+    <string name="upload">Upload</string>
 </resources>

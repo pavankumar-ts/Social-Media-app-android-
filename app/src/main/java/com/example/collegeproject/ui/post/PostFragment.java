@@ -11,23 +11,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.collegeproject.databinding.FragmentDashboardBinding;
+import com.example.collegeproject.databinding.FragmentPostBinding;
+import com.example.collegeproject.databinding.FragmentPostBinding;
 
-public class DashboardFragment extends Fragment {
+public class PostFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
-private FragmentDashboardBinding binding;
+    private PostViewModel postViewModel;
+private FragmentPostBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        postViewModel =
+                new ViewModelProvider(this).get(PostViewModel.class);
 
-    binding = FragmentDashboardBinding.inflate(inflater, container, false);
+    binding = FragmentPostBinding.inflate(inflater, container, false);
     View root = binding.getRoot();
 
         final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        postViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
