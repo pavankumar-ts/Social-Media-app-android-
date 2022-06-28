@@ -19,17 +19,6 @@
         android:textSize="24sp" />
 
     <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/name"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:padding="10dp"
-        tools:ignore="TextContrastCheck" />
-
-    <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,9 +34,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/phone_number"
+        android:importantForAutofill="no"
         android:inputType="phone"
-        tools:ignore="TouchTargetSizeCheck,TextContrastCheck"
-        android:importantForAutofill="no" />
+        tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
     <EditText
         android:id="@+id/password"
@@ -76,5 +65,12 @@
         android:text="@string/have_an_account"
         android:textSize="16sp"
         tools:ignore="TouchTargetSizeCheck" />
+
+    <ProgressBar
+        android:id="@+id/progressBarReg"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:visibility="invisible" />
 
 </LinearLayout>

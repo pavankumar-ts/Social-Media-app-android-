@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -30,15 +31,16 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ProfileActivity extends AppCompatActivity {
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
     StorageReference storageRef;
     Button addImg, btnUplaod;
+    EditText name, dob, bio;
     private static int RESULT_LOAD_IMAGE = 1;
     Uri imageUri;
     ImageView imageView;
     ProgressBar progressBar;
+    Map<String, Object> userProfile = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,9 @@ public class ProfileActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
         addImg = findViewById(R.id.btnAddImg);
+        name = findViewById(R.id.Pname);
+        bio = findViewById(R.id.bio);
+        dob = findViewById(R.id.dob);
         btnUplaod = findViewById(R.id.btnProfileUplaod);
         addImg.setOnClickListener(v -> {
             selectImage();
@@ -59,21 +64,28 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void profileUpload() {
         progressBar.setVisibility(View.VISIBLE);
-        storageRef = FirebaseStorage.getInstance().getReference("myImages/" + UUID.randomUUID().toString());
+        String uid = user.getUid();
+        storageRef = FirebaseStorage.getInstance().getReference("profileImages/" + uid.toString());
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                Log.d(TAG, "uri"+uri);
-                                Map<String, Object> image = new HashMap<>();
-                                image.put("uri",uri);
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference reference = database.getReference("imageURL");
-                                String uid = user.getUid();
-                                reference.child(uid).setValue(image);
+                                userProfile.put("uri",uri.toString());
+
+                                DatabaseReference reference = database.getReference("userProfile");
+
+                                //read name, bio, DOB
+                                String txtName = name.getText().toString();
+                                String txtBio = bio.getText().toString();
+                                String txtDOB = dob.getText().toString();
+                                userProfile.put("name", txtName);
+                                userProfile.put("bio", txtBio);
+                                userProfile.put("DOB", txtDOB);;
+                                reference.child(uid).setValue(userProfile);
                                 Toast.makeText(getApplicationContext(), "Successfully uploaded", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.INVISIBLE);
                                 imageView.setImageURI(null);
@@ -89,6 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void selectImage() {
         Intent i = new Intent();

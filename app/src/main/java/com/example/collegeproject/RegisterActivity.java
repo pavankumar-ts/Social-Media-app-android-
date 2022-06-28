@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,12 +28,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity<mAuth> extends AppCompatActivity {
-    EditText name;
     EditText phoneNo;
     EditText email;
     EditText password;
     Button btnRegister;
     TextView loginNav;
+    ProgressBar progressBar;
     private FirebaseAuth mAuth;
 
 
@@ -45,10 +46,10 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
 
         setContentView(R.layout.activity_register);
         btnRegister = findViewById(R.id.btnRegister);
-        name = findViewById(R.id.name);
         phoneNo = findViewById(R.id.phoneNo);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        progressBar = findViewById(R.id.progressBarReg);
         loginNav = findViewById(R.id.loginNav);
         loginNav.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -59,11 +60,11 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txtName = name.getText().toString();
+                progressBar.setVisibility(View.VISIBLE);
                 String txtPhoneNo = phoneNo.getText().toString();
                 String txtEmail = email.getText().toString();
                 String txtPassword = password.getText().toString();
-                if (TextUtils.isEmpty(txtName) || TextUtils.isEmpty(txtPhoneNo) ||  TextUtils.isEmpty(txtEmail) ||
+                if (TextUtils.isEmpty(txtPhoneNo) ||  TextUtils.isEmpty(txtEmail) ||
                         TextUtils.isEmpty(txtPassword)) {
                     Toast.makeText(getApplicationContext(), "fill the Fields", Toast.LENGTH_SHORT).show();
                 }
@@ -71,7 +72,7 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "short password", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    registerUser(txtName,txtEmail,txtPhoneNo , txtPassword);
+                    registerUser(txtEmail,txtPhoneNo , txtPassword);
                 }
             }
         });
@@ -79,7 +80,7 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
 
 
 
-    private void registerUser(String txtName, String txtEmail,String txtPhoneNo, String txtPassword) {
+    private void registerUser( String txtEmail,String txtPhoneNo, String txtPassword) {
 
         mAuth.createUserWithEmailAndPassword(txtEmail, txtPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -91,7 +92,6 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
                             String uid = user.getUid();
                             Map<String, Object> userData = new HashMap<>();
                             userData.put("email", email);
-                            userData.put("name", txtName);
                             userData.put("phoneNo", txtPhoneNo);
                             userData.put("password", txtPassword);
                             userData.put("uid", uid);
@@ -101,14 +101,16 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success"+user);
                             Toast.makeText(RegisterActivity.this, "Registered User " + user.getEmail(), Toast.LENGTH_LONG).show();
-                            Intent mainIntent = new Intent(RegisterActivity.this, DashboardActivity.class);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Intent mainIntent = new Intent(RegisterActivity.this, ProfileActivity.class);
                             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(mainIntent);
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
+                            progressBar.setVisibility(View.INVISIBLE);
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                            Toast.makeText(RegisterActivity.this, "Authentication failed\n E-mail is already in use\n or \n invalid E-mail",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
