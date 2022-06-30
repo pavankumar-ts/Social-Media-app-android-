@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +27,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText password;
     Button btnLogin;
     TextView registerNav;
+    ProgressBar progressBar;
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,27 +38,27 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.Lpassword);
         btnLogin = findViewById(R.id.btnLogin);
         registerNav = findViewById(R.id.registerNav);
-
+        progressBar = findViewById(R.id.progressBarLogin);
         btnLogin.setOnClickListener(v -> {
             String txtEmail = email.getText().toString();
             String txtPassword = password.getText().toString();
             if (TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPassword)) {
                 Toast.makeText(getApplicationContext(), "fill the Fields", Toast.LENGTH_SHORT).show();
-            }
-            else if (txtPassword.length() < 6){
+            } else if (txtPassword.length() < 6) {
                 Toast.makeText(getApplicationContext(), "short password", Toast.LENGTH_SHORT).show();
-            }
-            else{
+            } else {
                 LoginUser(txtEmail, txtPassword);
             }
         });
 
-        registerNav.setOnClickListener(v ->{
+        registerNav.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
     }
 
     private void LoginUser(String txtEmail, String txtPassword) {
+        progressBar.setVisibility(View.VISIBLE);
+        mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword(txtEmail, txtPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -66,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(getApplicationContext(), "Authentication failed\n invalid E-mail and password", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.VISIBLE);
                         }
                     }
                 });
