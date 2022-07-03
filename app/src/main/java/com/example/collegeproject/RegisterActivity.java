@@ -94,7 +94,7 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
                             userData.put("email", email);
                             userData.put("phoneNo", txtPhoneNo);
                             userData.put("password", txtPassword);
-                            userData.put("uid", uid);
+                            userData.put("userId", uid);
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             DatabaseReference reference = database.getReference("Users");
                             reference.child(uid).setValue(userData);

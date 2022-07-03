@@ -37,7 +37,6 @@ public class ProfileActivity extends AppCompatActivity {
     StorageReference storageRef;
     Button addImg, btnUplaod;
     EditText name, dob, bio;
-    private static int RESULT_LOAD_IMAGE = 1;
     Uri imageUri;
     ImageView imageView;
     ProgressBar progressBar;
@@ -86,6 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     userProfile.put("uri", uri.toString());
                                     DatabaseReference reference = database.getReference("userProfile");
                                     userProfile.put("name", txtName);
+                                    userProfile.put("userId", uid.toString());
                                     userProfile.put("bio", txtBio);
                                     userProfile.put("DOB", txtDOB);
                                     reference.child(uid).setValue(userProfile);
