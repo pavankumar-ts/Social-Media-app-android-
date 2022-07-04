@@ -3,7 +3,6 @@ package com.example.collegeproject.ui;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,25 +14,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.collegeproject.DashboardActivity;
-import com.example.collegeproject.ProfileActivity;
+import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.databinding.FragmentPostBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -46,6 +43,8 @@ public class PostFragment extends Fragment {
 
     private FragmentPostBinding binding;
     //Db ref
+    private DatabaseReference usersDatabase;
+
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     StorageReference storageRef;
@@ -55,6 +54,7 @@ public class PostFragment extends Fragment {
     ImageView imageView;
     Uri imageUri;
     ProgressBar progressBar;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -74,7 +74,7 @@ public class PostFragment extends Fragment {
             String txtLoc = loc.getText().toString();
             if (TextUtils.isEmpty(txtDesc) || TextUtils.isEmpty(txtLoc) || imageUri == null) {
                 Toast.makeText(getContext(), "fill the Fields and Select the image", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 uplaod(txtDesc, txtLoc);
             }
         });
@@ -85,12 +85,13 @@ public class PostFragment extends Fragment {
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(i,100);
+        startActivityForResult(i, 100);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && data != null && data.getData() != null){
+        if (requestCode == 100 && data != null && data.getData() != null) {
             imageUri = data.getData();
             imageView.setImageURI(imageUri);
         }
@@ -98,7 +99,7 @@ public class PostFragment extends Fragment {
 
     private void uplaod(String txtDesc, String txtLoc) {
         progressBar.setVisibility(View.VISIBLE);
-        storageRef = FirebaseStorage.getInstance().getReference("postImages/"  + UUID.randomUUID().toString());
+        storageRef = FirebaseStorage.getInstance().getReference("postImages/" + UUID.randomUUID().toString());
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -110,21 +111,52 @@ public class PostFragment extends Fragment {
                                 String Cuid = user.getUid();
                                 Map<Object, String> post = new HashMap<>();
                                 DatabaseReference reference = database.getReference("posts");
-                                //creating unique postId
-                                String postId = reference.push().getKey();
-                                post.put("imageUrl", uri.toString());
-                                post.put("postId", postId);
-                                post.put("timeStamp", timestamp);
-                                post.put("userId", Cuid);
-                                post.put("likes", "0");
-                                post.put("descriptionText", txtDesc);
-                                post.put("location", txtLoc);
-                                reference.child(postId).setValue(post);
-                                progressBar.setVisibility(View.INVISIBLE);
-                                Toast.makeText(getContext(), "Successfully uploaded", Toast.LENGTH_SHORT).show();
-                                imageView.setImageResource(R.drawable.ic_baseline_add_to_photos_24);
-                                desc.setText(null);
-                                loc.setText(null);
+                                //read user data
+//                                usersDatabase = FirebaseDatabase.getInstance().getReference();
+//                                usersDatabase.child("Users").child(Cuid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                                        if (!task.isSuccessful()) {
+//                                            Log.e("firebase", "Error getting data", task.getException());
+//                                        }
+//                                        else {
+//                                            Log.d("firebase", String.valueOf(task.getResult().getValue()));
+//                                        }
+//                                    }
+//                                });
+                                DatabaseReference UserReference = database.getReference("userProfile").child(Cuid);
+                                ValueEventListener userListener = new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        // Get Post object and use the values to update the UI
+                                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                                        // ..
+                                        //creating unique postId
+                                        String postId = reference.push().getKey();
+                                        post.put("imageUrl", uri.toString());
+                                        post.put("postId", postId);
+                                        post.put("timeStamp", timestamp);
+                                        post.put("userId", Cuid);
+                                        post.put("likes", "0");
+                                        post.put("descriptionText", txtDesc);
+                                        post.put("location", txtLoc);
+                                        post.put("name", userProfile.getName());
+                                        post.put("dpUrl", userProfile.getUri());
+                                        reference.child(postId).setValue(post);
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        Toast.makeText(getContext(), "Successfully uploaded", Toast.LENGTH_SHORT).show();
+                                        imageView.setImageResource(R.drawable.ic_baseline_add_to_photos_24);
+                                        desc.setText(null);
+                                        loc.setText(null);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        // Getting Post failed, log a message
+                                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    }
+                                };
+                                UserReference.addValueEventListener(userListener);
                             }
                         });
                     }

@@ -27,4 +27,10 @@
     <string name="description">Description</string>
     <string name="location">Location</string>
     <string name="add_image">Add Image</string>
+    <string name="_0_likes">0 likes</string>
+    <string name="user_name">userProfile name</string>
+    <string name="todo">TODO</string>
+    <string name="like">like</string>
+    <string name="comments">comments</string>
+    <string name="image">image</string>
 </resources>
