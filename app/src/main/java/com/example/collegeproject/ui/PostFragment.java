@@ -17,7 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
@@ -112,18 +115,6 @@ public class PostFragment extends Fragment {
                                 Map<Object, String> post = new HashMap<>();
                                 DatabaseReference reference = database.getReference("posts");
                                 //read user data
-//                                usersDatabase = FirebaseDatabase.getInstance().getReference();
-//                                usersDatabase.child("Users").child(Cuid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                                        if (!task.isSuccessful()) {
-//                                            Log.e("firebase", "Error getting data", task.getException());
-//                                        }
-//                                        else {
-//                                            Log.d("firebase", String.valueOf(task.getResult().getValue()));
-//                                        }
-//                                    }
-//                                });
                                 DatabaseReference UserReference = database.getReference("userProfile").child(Cuid);
                                 ValueEventListener userListener = new ValueEventListener() {
                                     @Override
@@ -148,6 +139,8 @@ public class PostFragment extends Fragment {
                                         imageView.setImageResource(R.drawable.ic_baseline_add_to_photos_24);
                                         desc.setText(null);
                                         loc.setText(null);
+//                                        Intent i = new Intent(getContext(), HomeFragment.class);
+//                                        startActivity(i);
                                     }
 
                                     @Override

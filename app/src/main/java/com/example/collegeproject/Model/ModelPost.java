@@ -4,6 +4,9 @@ public class ModelPost {
     ModelPost(){
 
     }
+
+
+
     public String getDescriptionText() {
         return descriptionText;
     }

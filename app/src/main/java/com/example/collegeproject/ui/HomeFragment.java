@@ -1,6 +1,7 @@
 package com.example.collegeproject.ui;
 
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import com.example.collegeproject.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
@@ -31,16 +35,21 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        //recyclerView
         recyclerView = binding.recycleView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
         FirebaseRecyclerOptions<ModelPost> options =
                 new FirebaseRecyclerOptions.Builder<ModelPost>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts"), ModelPost.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("timeStamp"), ModelPost.class)
                         .build();
 
         adapter = new PostAdapter(options);
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         return root;
     }
