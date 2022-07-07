@@ -93,6 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     imageView.setImageURI(null);
                                     progressBar.setVisibility(View.INVISIBLE);
                                     startActivity(new Intent(ProfileActivity.this, DashboardActivity.class));
+                                    finish();
                                 }
                             });
                         }

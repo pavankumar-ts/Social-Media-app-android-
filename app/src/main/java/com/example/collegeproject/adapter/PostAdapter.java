@@ -3,7 +3,6 @@ package com.example.collegeproject.adapter;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.DrawableWrapper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 import com.example.collegeproject.Model.ModelPost;
 import com.example.collegeproject.R;
+import com.example.collegeproject.ui.LikeDispFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,22 +31,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import android.text.format.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.MyViewHolder> {
-    /**
-     * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
-     * {@link FirebaseRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
+
     public PostAdapter(@NonNull FirebaseRecyclerOptions<ModelPost> options) {
         super(options);
     }
@@ -95,7 +88,17 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
 
             }
         });
+        //likesCount onclickListener
+        holder.likesCount.setOnClickListener(v -> {
+            //list
+            AppCompatActivity activity =(AppCompatActivity) v.getContext();
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.home, new LikeDispFragment(model.getPostId()))
+                    .addToBackStack("back")
+                    .commit();
 
+        });
 
         holder.likesImg.setOnClickListener(v -> {
             //writing data to  like collection
@@ -162,6 +165,11 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
 
     }
 
+    @Override
+    public int getItemCount() {
+        return super.getItemCount();
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -188,4 +196,5 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
             time = itemView.findViewById(R.id.time);
         }
     }
+
 }

@@ -139,8 +139,11 @@ public class PostFragment extends Fragment {
                                         imageView.setImageResource(R.drawable.ic_baseline_add_to_photos_24);
                                         desc.setText(null);
                                         loc.setText(null);
-//                                        Intent i = new Intent(getContext(), HomeFragment.class);
-//                                        startActivity(i);
+                                        FragmentManager fragmentManager = getFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        HomeFragment homeFragment = new HomeFragment();
+                                        fragmentTransaction.replace(R.id.nav_host_fragment_activity_dashboard, homeFragment);
+                                        fragmentTransaction.commit();
                                     }
 
                                     @Override

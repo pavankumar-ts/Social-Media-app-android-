@@ -30,6 +30,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     RecyclerView recyclerView;
     PostAdapter adapter;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -46,13 +47,14 @@ public class HomeFragment extends Fragment {
                 new FirebaseRecyclerOptions.Builder<ModelPost>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("timeStamp"), ModelPost.class)
                         .build();
-
         adapter = new PostAdapter(options);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
         return root;
+
     }
+
     @Override
     public void onStart() {
         super.onStart();
