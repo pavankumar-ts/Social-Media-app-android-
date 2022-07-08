@@ -23,16 +23,17 @@ public class StartActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             startActivity(new Intent(StartActivity.this, DashboardActivity.class));
+            finish();
         } else {
             // No user is signed in
             btnRegister.setOnClickListener(v -> {
                 startActivity(new Intent(StartActivity.this, RegisterActivity.class));
+                finish();
             });
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(StartActivity.this, LoginActivity.class);
-                    startActivity(i);
+                    startActivity(new Intent(StartActivity.this, LoginActivity.class));
                     finish();
                 }
             });

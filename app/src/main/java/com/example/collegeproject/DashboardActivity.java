@@ -1,26 +1,39 @@
 package com.example.collegeproject;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
+
+import com.example.collegeproject.ui.HomeFragment;
+import com.example.collegeproject.ui.LikeDispFragment;
+import com.example.collegeproject.ui.LikeDispFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import com.example.collegeproject.databinding.ActivityDashboardBinding;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class DashboardActivity extends AppCompatActivity {
 
-private ActivityDashboardBinding binding;
+    private ActivityDashboardBinding binding;
+    BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-     binding = ActivityDashboardBinding.inflate(getLayoutInflater());
-     setContentView(binding.getRoot());
+        binding = ActivityDashboardBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(

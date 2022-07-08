@@ -74,7 +74,7 @@
         <ImageView
             android:id="@+id/postImg"
             android:layout_width="match_parent"
-            android:layout_height="433dp"
+            android:layout_height="390dp"
             android:contentDescription="@string/image"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_baseline_image_24" />

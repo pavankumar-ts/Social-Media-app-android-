@@ -4,24 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".ui.LikeDispFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_margin="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/goBack"
+
+                android:id="@+id/goback"
                 android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="10dp"
+                android:layout_height="50dp"
                 android:src="@drawable/ic_baseline_arrow_back_24" />
 
             <TextView
@@ -34,35 +34,47 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/likeRecyclerView"
+            android:id="@+id/commentsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="593dp"
-            android:layout_margin="20dp">
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="55dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="65dp" />
 
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="horizontal">
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="6dp"
+            android:background="#FFFFFF">
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvComments"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="50dp"
+                android:defaultFocusHighlightEnabled="false"
                 android:ems="10"
+                android:focusedByDefault="false"
                 android:hint="Comment Here"
                 android:inputType="textPersonName"
+                android:selectAllOnFocus="true"
+                android:textIsSelectable="false"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/postComments"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"
                 android:src="@drawable/ic_baseline_send_24" />
-        </LinearLayout>
-    </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
 </FrameLayout>

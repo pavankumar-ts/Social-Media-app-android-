@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 
 import com.example.collegeproject.Model.ModelPost;
 import com.example.collegeproject.R;
+import com.example.collegeproject.ui.CommentsDispFragment;
 import com.example.collegeproject.ui.LikeDispFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -31,6 +32,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import android.text.format.DateFormat;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -88,16 +90,30 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
 
             }
         });
-        //likesCount onclickListener
-        holder.likesCount.setOnClickListener(v -> {
-            //list
-            AppCompatActivity activity =(AppCompatActivity) v.getContext();
+        //open comments fragment
+        holder.comments.setOnClickListener(v -> {
+            AppCompatActivity activity = (AppCompatActivity) v.getContext();
             activity.getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.home, new LikeDispFragment(model.getPostId()))
+                    .replace(R.id.home, new CommentsDispFragment(model.getPostId()))
                     .addToBackStack("back")
                     .commit();
-
+        });
+        //likesCount onclickListener
+        holder.likesCount.setOnClickListener(v -> {
+            int likeCheckZero = Integer.parseInt(model.getLikes());
+            if (likeCheckZero != 0){
+                //fragment switching
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.home, new LikeDispFragment(model.getPostId()))
+                        .addToBackStack("back")
+                        .commit();
+                Log.i(TAG, "onBindViewHolder: "+model.getLikes());
+            }else{
+                Toast.makeText(v.getContext(), "zero Likes", Toast.LENGTH_SHORT).show();
+            }
         });
 
         holder.likesImg.setOnClickListener(v -> {

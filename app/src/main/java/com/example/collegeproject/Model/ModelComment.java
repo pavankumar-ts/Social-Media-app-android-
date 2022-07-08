@@ -1,16 +1,9 @@
 package com.example.collegeproject.Model;
 
 public class ModelComment {
-    String postId, userId, timeStamp;
+    String postId, userId,commentsText, timeStamp;
 
     public ModelComment() {
-
-    }
-
-    public ModelComment(String postId, String userId, String timeStamp) {
-        this.postId = postId;
-        this.userId = userId;
-        this.timeStamp = timeStamp;
     }
 
     public String getPostId() {
@@ -29,6 +22,14 @@ public class ModelComment {
         this.userId = userId;
     }
 
+    public String getCommentsText() {
+        return commentsText;
+    }
+
+    public void setCommentsText(String commentsText) {
+        this.commentsText = commentsText;
+    }
+
     public String getTimeStamp() {
         return timeStamp;
     }
@@ -36,4 +37,13 @@ public class ModelComment {
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
     }
+
+    public ModelComment(String postId, String userId, String commentsText, String timeStamp) {
+        this.postId = postId;
+        this.userId = userId;
+        this.commentsText = commentsText;
+        this.timeStamp = timeStamp;
+    }
 }
+
+
