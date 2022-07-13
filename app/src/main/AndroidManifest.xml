@@ -11,7 +11,7 @@
         android:theme="@style/Theme.CollegeProject">
         <activity
             android:name=".ProfileActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".DashboardActivity"
             android:exported="false"

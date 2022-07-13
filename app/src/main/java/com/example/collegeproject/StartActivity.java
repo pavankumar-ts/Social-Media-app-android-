@@ -28,16 +28,14 @@ public class StartActivity extends AppCompatActivity {
             // No user is signed in
             btnRegister.setOnClickListener(v -> {
                 startActivity(new Intent(StartActivity.this, RegisterActivity.class));
-                finish();
+
             });
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(StartActivity.this, LoginActivity.class));
-                    finish();
                 }
             });
         }
-
     }
 }

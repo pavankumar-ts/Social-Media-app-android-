@@ -10,16 +10,20 @@
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_baseline_person_black_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.2301801801801802" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_baseline_save__24.xml" value="0.2301801801801802" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_launcher_background.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_like_red_icon.xml" value="0.2301801801801802" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_likes_icon.xml" value="0.2301801801801802" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_log_out_icon.xml" value="0.156" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/img.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/drawable/likes.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/activity_dashboard.xml" value="0.21621621621621623" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/activity_demo.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/activity_disp_likes.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/activity_main.xml" value="0.25" />
@@ -28,15 +32,17 @@
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/activity_start.xml" value="0.25" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_comments_disp.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_dashboard.xml" value="0.25" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_demo.xml" value="0.20405405405405405" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_home.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_like_disp.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_likes_disp.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_notifications.xml" value="0.25" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_post.xml" value="0.25" />
-        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_profile.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_sample.xml" value="0.21621621621621623" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_saved.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/likes_view.xml" value="0.21621621621621623" />
-        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/search_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/search_fragment.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_comment.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_home.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_likes.xml" value="0.21621621621621623" />

@@ -1,9 +1,12 @@
 package com.example.collegeproject.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,9 +56,9 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         FirebaseRecyclerOptions<ModelPost> options =
                 new FirebaseRecyclerOptions.Builder<ModelPost>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("timeStamp"), ModelPost.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts"), ModelPost.class)
                         .build();
-        adapter = new PostAdapter(options);
+        adapter = new PostAdapter(options, "HomeFragment" );
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

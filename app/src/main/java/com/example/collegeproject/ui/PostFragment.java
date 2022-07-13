@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.collegeproject.DashboardActivity;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.databinding.FragmentPostBinding;
@@ -134,16 +135,13 @@ public class PostFragment extends Fragment {
                                         post.put("name", userProfile.getName());
                                         post.put("dpUrl", userProfile.getUri());
                                         reference.child(postId).setValue(post);
+                                        startActivity(new Intent(getContext(), DashboardActivity.class));
+                                        getActivity().finish();
                                         progressBar.setVisibility(View.INVISIBLE);
                                         Toast.makeText(getContext(), "Successfully uploaded", Toast.LENGTH_SHORT).show();
                                         imageView.setImageResource(R.drawable.ic_baseline_add_to_photos_24);
                                         desc.setText(null);
                                         loc.setText(null);
-                                        FragmentManager fragmentManager = getFragmentManager();
-                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                        HomeFragment homeFragment = new HomeFragment();
-                                        fragmentTransaction.replace(R.id.nav_host_fragment_activity_dashboard, homeFragment);
-                                        fragmentTransaction.commit();
                                     }
 
                                     @Override

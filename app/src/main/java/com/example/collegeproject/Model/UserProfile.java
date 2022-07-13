@@ -1,13 +1,17 @@
 package com.example.collegeproject.Model;
 
-import com.google.firebase.firestore.auth.User;
-
 public class UserProfile {
     UserProfile(){
 
     }
 
-    public String name, uri,  bio;
+    public UserProfile(String name, String uri, String bio, String dob, String userId) {
+        this.name = name;
+        this.uri = uri;
+        this.bio = bio;
+        this.dob = dob;
+        this.userId = userId;
+    }
 
     public String getName() {
         return name;
@@ -33,10 +37,22 @@ public class UserProfile {
         this.bio = bio;
     }
 
-
-    public UserProfile(String name, String uri, String DOB, String bio, String userId) {
-        this.name = name;
-        this.uri = uri;
-        this.bio = bio;
+    public String getDob() {
+        return dob;
     }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String name, uri,  bio, dob, userId;
+
 }

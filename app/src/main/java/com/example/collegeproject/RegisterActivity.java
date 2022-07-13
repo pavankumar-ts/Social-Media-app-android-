@@ -51,9 +51,7 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
         password = findViewById(R.id.password);
         progressBar = findViewById(R.id.progressBarReg);
         loginNav = findViewById(R.id.loginNav);
-        loginNav.setOnClickListener(v -> {
-            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-        });
+        loginNav.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
 
 
 

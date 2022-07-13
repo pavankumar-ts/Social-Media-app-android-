@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.collegeproject.ui.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/single_row_home" />
 
     <fragment
         android:id="@+id/navigation_post"
@@ -21,10 +21,33 @@
         android:id="@+id/navigation_profile"
         android:name="com.example.collegeproject.ui.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_savedFragment"
+            app:destination="@id/savedFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_search"
         android:name="com.example.collegeproject.ui.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/search_fragment" />
+        tools:layout="@layout/search_fragment" >
+        <action
+            android:id="@+id/action_navigation_search_to_commentsDispFragment"
+            app:destination="@id/commentsDispFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentsDispFragment"
+        android:name="com.example.collegeproject.ui.CommentsDispFragment"
+        android:label="CommentsDispFragment" >
+        <action
+            android:id="@+id/action_commentsDispFragment_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/savedFragment"
+        android:name="com.example.collegeproject.ui.SavedFragment"
+        android:label="@string/saved_post"
+        tools:layout="@layout/fragment_saved"
+        app:popUpTo="@+id/Fprofile"
+        app:popUpToInclusive="true"/>
 </navigation>

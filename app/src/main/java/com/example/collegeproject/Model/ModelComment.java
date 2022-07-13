@@ -1,10 +1,13 @@
 package com.example.collegeproject.Model;
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+
 public class ModelComment {
     String postId, userId,commentsText, timeStamp;
 
     public ModelComment() {
     }
+
 
     public String getPostId() {
         return postId;

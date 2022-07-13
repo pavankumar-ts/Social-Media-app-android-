@@ -87,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     userProfile.put("name", txtName);
                                     userProfile.put("userId", uid.toString());
                                     userProfile.put("bio", txtBio);
-                                    userProfile.put("DOB", txtDOB);
+                                    userProfile.put("dob", txtDOB);
                                     reference.child(uid).setValue(userProfile);
                                     Toast.makeText(getApplicationContext(), "Successfully uploaded", Toast.LENGTH_SHORT).show();
                                     imageView.setImageURI(null);

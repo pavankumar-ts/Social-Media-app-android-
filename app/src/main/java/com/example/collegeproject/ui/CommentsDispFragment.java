@@ -2,7 +2,13 @@ package com.example.collegeproject.ui;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,19 +18,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.Resource;
 import com.example.collegeproject.Model.ModelComment;
 import com.example.collegeproject.Model.ModelPost;
 import com.example.collegeproject.R;
 import com.example.collegeproject.adapter.CommentAdapter;
 import com.example.collegeproject.adapter.PostAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class CommentsDispFragment extends Fragment {
@@ -33,16 +43,17 @@ public class CommentsDispFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    //fragment
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     RecyclerView recyclerView;
     CommentAdapter adapter;
-    String postId;
+    String postId, fragment;
     ImageView goBack, postComments;
     TextView comment;
-
     //DB
     private DatabaseReference CommentDb;
     // ...auth
@@ -53,7 +64,8 @@ public class CommentsDispFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public CommentsDispFragment(String postId) {
+    public CommentsDispFragment(String postId, String fragment) {
+        this.fragment = fragment;
         this.postId = postId;
     }
 
@@ -101,7 +113,15 @@ public class CommentsDispFragment extends Fragment {
         //goback;
         goBack = view.findViewById(R.id.goback);
         goBack.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().popBackStack();
+            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_dashboard);
+            if (fragment == "ProfileFragment") {
+                navController.navigate(R.id.Fprofile);
+
+            } else {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+
+
         });
         //TextView Comment
         comment = view.findViewById(R.id.tvComments);
@@ -113,7 +133,7 @@ public class CommentsDispFragment extends Fragment {
             String Cuid = user.getUid();
             String txtComment = comment.getText().toString();
             final String timestamp = String.valueOf(System.currentTimeMillis());
-            postComment(txtComment);
+
             CommentDb = FirebaseDatabase.getInstance().getReference("comments");
             Map<Object, String> commentData = new HashMap<>();
             commentData.put("commentsText", txtComment);
@@ -126,6 +146,7 @@ public class CommentsDispFragment extends Fragment {
         });
         return view;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -137,7 +158,5 @@ public class CommentsDispFragment extends Fragment {
         super.onStop();
         adapter.stopListening();
     }
-    private void postComment(String txtComment) {
 
-    }
 }
