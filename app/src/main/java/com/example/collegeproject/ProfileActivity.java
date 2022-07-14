@@ -1,7 +1,5 @@
 package com.example.collegeproject;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,23 +15,29 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.collegeproject.Model.UserProfile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class ProfileActivity extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference userDB;
+
     StorageReference storageRef;
     Button addImg, btnUplaod;
     EditText name, dob, bio;
@@ -41,6 +45,10 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView imageView;
     ProgressBar progressBar;
     Map<String, Object> userProfile = new HashMap<>();
+
+
+    //current user id
+    String Cuid = user.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +62,29 @@ public class ProfileActivity extends AppCompatActivity {
         bio = findViewById(R.id.bio);
         dob = findViewById(R.id.dob);
         btnUplaod = findViewById(R.id.btnProfileUplaod);
+
+        userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(Cuid);
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+
+                Glide.with(imageView.getContext()).load(userProfile.getUri()).into(imageView);
+                name.setText(userProfile.getName());
+                dob.setText(userProfile.getDob());
+                bio.setText(userProfile.getBio());
+                // ..
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("firebase", "Error getting data", databaseError.toException());
+            }
+        };
+        userDB.addValueEventListener(postListener);
+
         addImg.setOnClickListener(v -> {
             selectImage();
         });
@@ -63,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void profileUpload() {
-        String uid = user.getUid();
+
         //read name, bio, DOB
         String txtName = name.getText().toString();
         String txtBio = bio.getText().toString();
@@ -73,7 +104,7 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "fill the Fields and Select the image", Toast.LENGTH_SHORT).show();
         } else {
             progressBar.setVisibility(View.VISIBLE);
-            storageRef = FirebaseStorage.getInstance().getReference("profileImages/" + uid.toString());
+            storageRef = FirebaseStorage.getInstance().getReference("profileImages/" + Cuid.toString());
             storageRef.putFile(imageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -85,10 +116,10 @@ public class ProfileActivity extends AppCompatActivity {
                                     userProfile.put("uri", uri.toString());
                                     DatabaseReference reference = database.getReference("userProfile");
                                     userProfile.put("name", txtName);
-                                    userProfile.put("userId", uid.toString());
+                                    userProfile.put("userId", Cuid.toString());
                                     userProfile.put("bio", txtBio);
                                     userProfile.put("dob", txtDOB);
-                                    reference.child(uid).setValue(userProfile);
+                                    reference.child(Cuid).setValue(userProfile);
                                     Toast.makeText(getApplicationContext(), "Successfully uploaded", Toast.LENGTH_SHORT).show();
                                     imageView.setImageURI(null);
                                     progressBar.setVisibility(View.INVISIBLE);

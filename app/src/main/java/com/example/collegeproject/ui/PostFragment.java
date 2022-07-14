@@ -115,42 +115,23 @@ public class PostFragment extends Fragment {
                                 String Cuid = user.getUid();
                                 Map<Object, String> post = new HashMap<>();
                                 DatabaseReference reference = database.getReference("posts");
-                                //read user data
-                                DatabaseReference UserReference = database.getReference("userProfile").child(Cuid);
-                                ValueEventListener userListener = new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        // Get Post object and use the values to update the UI
-                                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-                                        // ..
-                                        //creating unique postId
-                                        String postId = reference.push().getKey();
-                                        post.put("imageUrl", uri.toString());
-                                        post.put("postId", postId);
-                                        post.put("timeStamp", timestamp);
-                                        post.put("userId", Cuid);
-                                        post.put("likes", "0");
-                                        post.put("descriptionText", txtDesc);
-                                        post.put("location", txtLoc);
-                                        post.put("name", userProfile.getName());
-                                        post.put("dpUrl", userProfile.getUri());
-                                        reference.child(postId).setValue(post);
-                                        startActivity(new Intent(getContext(), DashboardActivity.class));
-                                        getActivity().finish();
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                        Toast.makeText(getContext(), "Successfully uploaded", Toast.LENGTH_SHORT).show();
-                                        imageView.setImageResource(R.drawable.ic_baseline_add_to_photos_24);
-                                        desc.setText(null);
-                                        loc.setText(null);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        // Getting Post failed, log a message
-                                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                                    }
-                                };
-                                UserReference.addValueEventListener(userListener);
+                                //creating unique postId
+                                String postId = reference.push().getKey();
+                                post.put("imageUrl", uri.toString());
+                                post.put("postId", postId);
+                                post.put("timeStamp", timestamp);
+                                post.put("userId", Cuid);
+                                post.put("likes", "0");
+                                post.put("descriptionText", txtDesc);
+                                post.put("location", txtLoc);
+                                reference.child(postId).setValue(post);
+                                startActivity(new Intent(getContext(), DashboardActivity.class));
+                                getActivity().finish();
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(getContext(), "Successfully uploaded", Toast.LENGTH_SHORT).show();
+                                imageView.setImageResource(R.drawable.ic_baseline_add_to_photos_24);
+                                desc.setText(null);
+                                loc.setText(null);
                             }
                         });
                     }

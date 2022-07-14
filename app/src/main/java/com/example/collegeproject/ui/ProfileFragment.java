@@ -14,20 +14,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.collegeproject.DashboardActivity;
-import com.example.collegeproject.Model.ModelComment;
 import com.example.collegeproject.Model.ModelPost;
 import com.example.collegeproject.Model.UserProfile;
+import com.example.collegeproject.ProfileActivity;
 import com.example.collegeproject.R;
 import com.example.collegeproject.StartActivity;
-import com.example.collegeproject.adapter.PostAdapter;
+import com.example.collegeproject.adapter.PostDisplayAdapter;
 import com.example.collegeproject.databinding.FragmentProfileBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,7 +48,7 @@ public class ProfileFragment extends Fragment {
     Button btnEdit;
     ImageView dp, logout;
     RecyclerView recyclerView;
-    PostAdapter adapter;
+    PostDisplayAdapter adapter;
     LinearLayout saved;
 
 
@@ -79,7 +77,7 @@ public class ProfileFragment extends Fragment {
                 UserProfile userData = dataSnapshot.getValue(UserProfile.class);
                 // ..
                 name.setText("Name : " + userData.getName());
-                bio.setText("Bio : " + userData.getBio());
+                bio.setText(userData.getBio());
                 dob.setText("DOB : " + userData.getDob());
                 Glide.with(dp.getContext()).load(userData.getUri()).into(dp);
             }
@@ -103,20 +101,35 @@ public class ProfileFragment extends Fragment {
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("userId").equalTo(Cuid), ModelPost.class)
                         .build();
 
-        adapter = new PostAdapter(options, "ProfileFragment");
+        adapter = new PostDisplayAdapter(options, "ProfileFragment");
         recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(null);
         adapter.notifyDataSetChanged();
 
         //saved
         saved.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_navigation_profile_to_savedFragment);
+            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.Fprofile, new SavedFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
+
+        //btnEdit
+        btnEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            startActivity(intent);
+
+        });
+
 
         //logout
         logout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getActivity(), StartActivity.class));
         });
+
 
 
         return root;

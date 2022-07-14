@@ -8,21 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 import com.example.collegeproject.Model.ModelPost;
+import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.ui.CommentsDispFragment;
 import com.example.collegeproject.ui.LikeDispFragment;
+import com.example.collegeproject.ui.ProfileFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,14 +44,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.MyViewHolder> {
+public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostDisplayAdapter.MyViewHolder> {
     String fragment;
     //fragments
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
 
-    public PostAdapter(@NonNull FirebaseRecyclerOptions<ModelPost> options, String fragment) {
+    public PostDisplayAdapter(@NonNull FirebaseRecyclerOptions<ModelPost> options, String fragment) {
         super(options);
         this.fragment = fragment;
 
@@ -61,18 +63,27 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
     //likes ref
     DatabaseReference likesRef = database.getReference("likes");
     DatabaseReference saveRef = database.getReference("saved");
+    private DatabaseReference userProfileDB;
+
 
 
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull ModelPost model) {
+        userProfileDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(model.getUserId());
         //adding data into Views like TextView, imageView
+        ValueEventListener profileListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                UserProfile UserProfile = dataSnapshot.getValue(UserProfile.class);
+                String name = UserProfile.getName();
+                String dp = UserProfile.getUri();
 
-        //current user
         String Cuid = user.getUid();
 
-        holder.name.setText(model.getName());
+        holder.name.setText(name);
         holder.desc.setText(model.getDescriptionText());
         holder.likesCount.setText(model.getLikes() + " Likes");
         holder.loc.setText(model.getLocation());
@@ -84,13 +95,20 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
 
         //loading image URL to imageView
         Glide.with(holder.postImg.getContext()).load(model.getImageUrl()).into(holder.postImg);
-        Glide.with(holder.userDP.getContext()).load(model.getDpUrl()).into(holder.userDP);
+        Glide.with(holder.userDP.getContext()).load(dp).into(holder.userDP);
 
-        //Dp onclick
-        holder.userDP.setOnClickListener(v -> {
-
-
-
+        //Dp @ name onclick
+        holder.profileNav.setOnClickListener(v -> {
+            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+            //....
+            if (fragment == "HomeFragment") {
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment_activity_dashboard, new ProfileFragment(), "fragments")
+                        .addToBackStack(null)
+                        .commit();
+                Toast.makeText(v.getContext(), " not home ", Toast.LENGTH_SHORT).show();
+            }
         });
 
         //like imageView
@@ -237,7 +255,7 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
             if (fragment == "ProfileFragment") {
                 activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.Fprofile, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
+                        .replace(R.id.nav_host_fragment_activity_dashboard, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
                         .addToBackStack(null)
                         .commit();
                 Toast.makeText(v.getContext(), " not home ", Toast.LENGTH_SHORT).show();
@@ -270,6 +288,15 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
                 Toast.makeText(v.getContext(), "zero Likes", Toast.LENGTH_SHORT).show();
             }
         });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        userProfileDB.addValueEventListener(profileListener);
     }
 
     @Override
@@ -289,6 +316,7 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
         //collect the single_row.xml data with help of ID
         ImageView userDP, postImg, likesImg, comments, save;
         TextView name, desc, likesCount, loc, time;
+        LinearLayout profileNav;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -302,6 +330,7 @@ public class PostAdapter extends FirebaseRecyclerAdapter<ModelPost, PostAdapter.
             loc = itemView.findViewById(R.id.locHome);
             time = itemView.findViewById(R.id.time);
             save = itemView.findViewById(R.id.save);
+            profileNav = itemView.findViewById(R.id.profileNav);
 
         }
     }

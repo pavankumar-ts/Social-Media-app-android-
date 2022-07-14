@@ -5,7 +5,6 @@
     android:id="@+id/Fprofile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
     android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".ui.ProfileFragment">
@@ -52,6 +51,25 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="@string/dob" />
+
+                <ScrollView
+                    android:id="@+id/SCROLLER_ID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:scrollbars="vertical">
+
+                    <TextView
+                        android:id="@+id/profileBio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="40dp"
+                        android:scrollbars="vertical"
+                        android:text="@string/bio"
+                        android:textSize="20sp" />
+                </ScrollView>
+
+
             </LinearLayout>
 
         </LinearLayout>
@@ -61,13 +79,6 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="2dp"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/profileBio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/bio"
-                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

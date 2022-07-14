@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.collegeproject.Model.ModelPost;
 import com.example.collegeproject.R;
-import com.example.collegeproject.adapter.PostAdapter;
+import com.example.collegeproject.adapter.PostDisplayAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SavedFragment extends Fragment {
     RecyclerView recyclerView;
-    PostAdapter adapter;
+    PostDisplayAdapter adapter;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -76,7 +76,7 @@ public class SavedFragment extends Fragment {
                 new FirebaseRecyclerOptions.Builder<ModelPost>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("saved").orderByChild("userId").equalTo(Cuid), ModelPost.class)
                         .build();
-        adapter = new PostAdapter(options, "SavedFragment" );
+        adapter = new PostDisplayAdapter(options, "SavedFragment" );
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

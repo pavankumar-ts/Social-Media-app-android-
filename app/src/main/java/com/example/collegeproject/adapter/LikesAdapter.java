@@ -41,8 +41,7 @@ public class LikesAdapter extends FirebaseRecyclerAdapter<ModelLikes, LikesAdapt
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull ModelLikes model) {
         //fetech DP from userProfile collection
         String Cuid = user.getUid();
-        String likedUser = model.getUserId();
-        userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(likedUser);
+        userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(model.getUserId());
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
