@@ -10,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.collegeproject.Model.ModelPost;
+import com.example.collegeproject.Model.ModelSavedPost;
 import com.example.collegeproject.R;
 import com.example.collegeproject.adapter.PostDisplayAdapter;
+import com.example.collegeproject.adapter.SavedPostAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SavedFragment extends Fragment {
     RecyclerView recyclerView;
-    PostDisplayAdapter adapter;
+    SavedPostAdapter adapter;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -69,14 +70,12 @@ public class SavedFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rvSaved);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setReverseLayout(true);
-        layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        FirebaseRecyclerOptions<ModelPost> options =
-                new FirebaseRecyclerOptions.Builder<ModelPost>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("saved").orderByChild("userId").equalTo(Cuid), ModelPost.class)
+        FirebaseRecyclerOptions<ModelSavedPost> options =
+                new FirebaseRecyclerOptions.Builder<ModelSavedPost>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("saved").orderByChild("savedUserId").equalTo(Cuid), ModelSavedPost.class)
                         .build();
-        adapter = new PostDisplayAdapter(options, "SavedFragment" );
+        adapter = new SavedPostAdapter(options);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

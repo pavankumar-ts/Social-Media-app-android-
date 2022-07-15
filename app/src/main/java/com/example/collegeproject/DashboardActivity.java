@@ -1,13 +1,18 @@
 package com.example.collegeproject;
 
+import static java.security.AccessController.getContext;
+
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.collegeproject.ui.HomeFragment;
 import com.example.collegeproject.ui.LikeDispFragment;
 import com.example.collegeproject.ui.LikeDispFragment;
+import com.example.collegeproject.ui.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -25,8 +30,8 @@ public class DashboardActivity extends AppCompatActivity {
 
     private ActivityDashboardBinding binding;
     BottomNavigationView navView;
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
+    NavController navController;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,16 @@ public class DashboardActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if(!navView.getMenu().findItem(R.id.navigation_home).isChecked() && count == 0){
 
+        }else{
+            super.onBackPressed();
+
+        }
+    }
 
 
 }

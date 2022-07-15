@@ -2,7 +2,8 @@ package com.example.collegeproject.adapter;
 
 import static android.content.ContentValues.TAG;
 
-import android.annotation.SuppressLint;
+import android.nfc.Tag;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +11,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-
 import com.example.collegeproject.Model.ModelPost;
+import com.example.collegeproject.Model.ModelSavedPost;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.ui.CommentsDispFragment;
@@ -36,80 +36,89 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import android.text.format.DateFormat;
-import android.widget.Toast;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostDisplayAdapter.MyViewHolder> {
-    String fragment;
-    //fragments
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
-    String name, dp;
+public class SavedPostAdapter extends FirebaseRecyclerAdapter<ModelSavedPost, SavedPostAdapter.MyViewHolder> {
+    //..
+    private DatabaseReference userDB;
+    private DatabaseReference postDB;
 
-    public PostDisplayAdapter(@NonNull FirebaseRecyclerOptions<ModelPost> options, String fragment) {
-        super(options);
-        this.fragment = fragment;
-
-    }
-
-
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    //user
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String Cuid = user.getUid();
+
+    //db
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     //likes ref
     DatabaseReference likesRef = database.getReference("likes");
     DatabaseReference saveRef = database.getReference("saved");
-    private DatabaseReference userProfileDB;
+    public SavedPostAdapter(@NonNull FirebaseRecyclerOptions<ModelSavedPost> options) {
+        super(options);
+    }
 
-
-    @SuppressLint("SetTextI18n")
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull ModelPost model) {
-        userProfileDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(model.getUserId());
-        //adding data into Views like TextView, imageView
-        ValueEventListener profileListener = new ValueEventListener() {
+    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull ModelSavedPost model) {
+        //fetch DP from userProfile collection
+        //fetch userProfile
+        userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(model.getUserId());
+        ValueEventListener userProfile = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                UserProfile UserProfile = dataSnapshot.getValue(UserProfile.class);
-                name = UserProfile.getName();
-                dp = UserProfile.getUri();
+                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                holder.name.setText(userProfile.getName());
+                Glide.with(holder.dp.getContext()).load(userProfile.getUri()).into(holder.dp);
+                // ..
+            }
 
-                String Cuid = user.getUid();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        userDB.addValueEventListener(userProfile);
 
-                holder.name.setText(name);
-                holder.desc.setText(model.getDescriptionText());
-                holder.likesCount.setText(model.getLikes() + " Likes");
-                holder.loc.setText(model.getLocation());
+        //fetch post data
+        postDB = FirebaseDatabase.getInstance().getReference().child("posts").child(model.getPostId());
+        ValueEventListener postData = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                ModelPost post = dataSnapshot.getValue(ModelPost.class);
 
                 Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-                calendar.setTimeInMillis(Long.parseLong(model.getTimeStamp()));
+                calendar.setTimeInMillis(Long.parseLong(post.getTimeStamp()));
                 String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
                 holder.time.setText(timedate);
 
-                //loading image URL to imageView
-                Glide.with(holder.postImg.getContext()).load(model.getImageUrl()).into(holder.postImg);
-                Glide.with(holder.userDP.getContext()).load(dp).into(holder.userDP);
+                holder.description.setText(post.getDescriptionText());
+                holder.loc.setText(post.getLocation());
+                holder.likesCount.setText(post.getLikes() + " Likes");
 
+
+
+                //img
+                Glide.with(holder.postImg.getContext()).load(post.getImageUrl()).into(holder.postImg);
+                // ..
                 //Dp & name onclick
                 holder.profileNav.setOnClickListener(v -> {
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
                     //....
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.nav_host_fragment_activity_dashboard, new ProfileFragment("HomeFragment", model.getUserId()), "fragments")
+                                .replace(R.id.nav_host_fragment_activity_dashboard, new ProfileFragment("ProfileFragment", post.getUserId()), "fragments")
                                 .addToBackStack(null)
                                 .commit();
                         Toast.makeText(v.getContext(), " not home ", Toast.LENGTH_SHORT).show();
-
                 });
 
                 //like imageView
-                Query queryLiked = likesRef.child(Cuid + model.getPostId());
+                Query queryLiked = likesRef.child(Cuid + post.getPostId());
                 queryLiked.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -144,6 +153,7 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostD
                     }
                 });
 
+
                 // like img onClickListener
                 holder.likesImg.setOnClickListener(v -> {
                     //writing data to  like collection
@@ -169,8 +179,6 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostD
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         int likeCount = Integer.parseInt(String.valueOf(snapshot.getValue())) + 1;
                                         postsLikes.child("likes").setValue(Integer.toString(likeCount));
-                                        Log.d(TAG, "likes..,.,,," + likeCount);
-
                                     }
 
                                     @Override
@@ -206,6 +214,34 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostD
                     });
                 });
 
+                //open comments fragment
+                holder.comments.setOnClickListener(v -> {
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    //....
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.nav_host_fragment_activity_dashboard, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
+                            .addToBackStack(null)
+                            .commit();
+                    //...
+
+                });
+                //likesCount onclickListener
+                holder.likesCount.setOnClickListener(v -> {
+                    int likeCheckZero = Integer.parseInt(post.getLikes());
+                    if (likeCheckZero != 0) {
+                        //fragment switching
+                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.nav_host_fragment_activity_dashboard, new LikeDispFragment(model.getPostId()))
+                                .addToBackStack("back")
+                                .commit();
+                        Log.i(TAG, "onBindViewHolder: " + post.getLikes());
+                    } else {
+                        Toast.makeText(v.getContext(), "zero Likes", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 //save post onclick
                 holder.save.setOnClickListener(v -> {
@@ -238,36 +274,6 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostD
                         }
                     });
                 });
-
-
-                //open comments fragment
-                holder.comments.setOnClickListener(v -> {
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    //....
-                        activity.getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.nav_host_fragment_activity_dashboard, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
-                                .addToBackStack(null)
-                                .commit();
-                    //...
-
-                });
-                //likesCount onclickListener
-                holder.likesCount.setOnClickListener(v -> {
-                    int likeCheckZero = Integer.parseInt(model.getLikes());
-                    if (likeCheckZero != 0) {
-                        //fragment switching
-                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        activity.getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.home, new LikeDispFragment(model.getPostId()))
-                                .addToBackStack("back")
-                                .commit();
-                        Log.i(TAG, "onBindViewHolder: " + model.getLikes());
-                    } else {
-                        Toast.makeText(v.getContext(), "zero Likes", Toast.LENGTH_SHORT).show();
-                    }
-                });
             }
 
             @Override
@@ -276,40 +282,33 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostD
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
-        userProfileDB.addValueEventListener(profileListener);
-    }
-
-    @Override
-    public int getItemCount() {
-        return super.getItemCount();
+        postDB.addValueEventListener(postData);
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //reference of single_row.xml
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_row_post, parent, false);
         return new MyViewHolder(view);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        //collect the single_row.xml data with help of ID
-        ImageView userDP, postImg, likesImg, comments, save;
-        TextView name, desc, likesCount, loc, time;
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+        ImageView dp, postImg, likesImg, comments, save;
+        TextView name, loc, time,  likesCount, description;
         LinearLayout profileNav;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            userDP = itemView.findViewById(R.id.userDP);
-            postImg = itemView.findViewById(R.id.postImg);
-            likesImg = itemView.findViewById(R.id.likesImg);
-            comments = itemView.findViewById(R.id.comments);
+            dp = itemView.findViewById(R.id.userDP);
             name = itemView.findViewById(R.id.userName);
-            desc = itemView.findViewById(R.id.description);
-            likesCount = itemView.findViewById(R.id.likesCount);
+            postImg = itemView.findViewById(R.id.postImg);
             loc = itemView.findViewById(R.id.locHome);
             time = itemView.findViewById(R.id.time);
+            likesImg = itemView.findViewById(R.id.likesImg);
+            comments = itemView.findViewById(R.id.comments);
             save = itemView.findViewById(R.id.save);
+            likesCount = itemView.findViewById(R.id.likesCount);
+            description = itemView.findViewById(R.id.description);
             profileNav = itemView.findViewById(R.id.profileNav);
 
         }

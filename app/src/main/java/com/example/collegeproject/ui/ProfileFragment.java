@@ -46,10 +46,23 @@ public class ProfileFragment extends Fragment {
 
     TextView name, dob, bio;
     Button btnEdit;
-    ImageView dp, logout;
+    ImageView dp;
+    LinearLayout logout;
     RecyclerView recyclerView;
     PostDisplayAdapter adapter;
-    LinearLayout saved;
+    LinearLayout saved, disp4Cuser;
+
+    String Cuid = user.getUid();
+    String fragment, userId;
+
+    public ProfileFragment() {
+        userId = Cuid;
+    }
+
+    public ProfileFragment(String fragment, String userId) {
+        this.fragment = fragment;
+        this.userId = userId;
+    }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,8 +70,6 @@ public class ProfileFragment extends Fragment {
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        //c user
-        String Cuid = user.getUid();
 
         name = binding.profileName;
         dp = binding.profileDp;
@@ -67,10 +78,10 @@ public class ProfileFragment extends Fragment {
         bio = binding.profileBio;
         saved = binding.saved;
         logout = binding.logout;
+        disp4Cuser = binding.disp4Cuser;
 
         //ref
-        DatabaseReference userDbRef = database.getReference().child("userProfile").child(Cuid);
-//        userDbRef.orderByChild("userId").equalTo(Cuid);
+        DatabaseReference userDbRef = database.getReference().child("userProfile").child(userId);
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -98,7 +109,7 @@ public class ProfileFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         FirebaseRecyclerOptions<ModelPost> options =
                 new FirebaseRecyclerOptions.Builder<ModelPost>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("userId").equalTo(Cuid), ModelPost.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("userId").equalTo(userId), ModelPost.class)
                         .build();
 
         adapter = new PostDisplayAdapter(options, "ProfileFragment");
@@ -106,6 +117,19 @@ public class ProfileFragment extends Fragment {
         recyclerView.setItemAnimator(null);
         adapter.notifyDataSetChanged();
 
+        Log.d("userId.....x.x.", userId);
+        Log.d("userId.....x.x.", Cuid);
+
+
+        //disp4Cuser
+        if (userId.equals(Cuid)) {
+            disp4Cuser.setVisibility(View.VISIBLE);
+            Log.d(TAG, "EQUAL");
+        }else {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) disp4Cuser.getLayoutParams();
+            layoutParams.height = 0;
+            disp4Cuser.setLayoutParams(layoutParams);
+        }
         //saved
         saved.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
@@ -129,7 +153,6 @@ public class ProfileFragment extends Fragment {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getActivity(), StartActivity.class));
         });
-
 
 
         return root;

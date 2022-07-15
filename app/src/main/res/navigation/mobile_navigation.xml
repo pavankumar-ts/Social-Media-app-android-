@@ -9,13 +9,17 @@
         android:id="@+id/navigation_home"
         android:name="com.example.collegeproject.ui.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/single_row_home" />
+        tools:layout="@layout/single_row_post" />
 
     <fragment
         android:id="@+id/navigation_post"
         android:name="com.example.collegeproject.ui.PostFragment"
         android:label="Post"
-        tools:layout="@layout/fragment_post" />
+        tools:layout="@layout/fragment_post" >
+        <action
+            android:id="@+id/action_navigation_post_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -25,6 +29,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_savedFragment"
             app:destination="@id/savedFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_home"
+            app:destination="@id/navigation_home" />
     </fragment>
     <fragment
         android:id="@+id/navigation_search"
@@ -34,6 +41,9 @@
         <action
             android:id="@+id/action_navigation_search_to_commentsDispFragment"
             app:destination="@id/commentsDispFragment" />
+        <action
+            android:id="@+id/action_navigation_search_to_navigation_home"
+            app:destination="@id/navigation_home" />
     </fragment>
     <fragment
         android:id="@+id/commentsDispFragment"
