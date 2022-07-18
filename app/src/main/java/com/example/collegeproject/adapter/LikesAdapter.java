@@ -31,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LikesAdapter extends FirebaseRecyclerAdapter<ModelLikes, LikesAdapter.MyViewHolder>{
     private DatabaseReference userDB;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     public LikesAdapter(@NonNull FirebaseRecyclerOptions<ModelLikes> options) {
         super(options);

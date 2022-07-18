@@ -45,12 +45,12 @@ public class ProfileFragment extends Fragment {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     TextView name, dob, bio;
-    Button btnEdit;
+    Button btnEdit, btnMsg;
     ImageView dp;
     LinearLayout logout;
     RecyclerView recyclerView;
     PostDisplayAdapter adapter;
-    LinearLayout saved, disp4Cuser;
+    LinearLayout saved, disp4Cuser, message;
 
     String Cuid = user.getUid();
     String fragment, userId;
@@ -79,6 +79,8 @@ public class ProfileFragment extends Fragment {
         saved = binding.saved;
         logout = binding.logout;
         disp4Cuser = binding.disp4Cuser;
+        message = binding.message;
+        btnMsg = binding.btnMsg;
 
         //ref
         DatabaseReference userDbRef = database.getReference().child("userProfile").child(userId);
@@ -117,18 +119,22 @@ public class ProfileFragment extends Fragment {
         recyclerView.setItemAnimator(null);
         adapter.notifyDataSetChanged();
 
-        Log.d("userId.....x.x.", userId);
-        Log.d("userId.....x.x.", Cuid);
-
 
         //disp4Cuser
         if (userId.equals(Cuid)) {
+            //save, logOut, edit
             disp4Cuser.setVisibility(View.VISIBLE);
-            Log.d(TAG, "EQUAL");
+            //msg
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) message.getLayoutParams();
+            layoutParams.height = 0;
+            message.setLayoutParams(layoutParams);
         }else {
+            //save, logOut, edit
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) disp4Cuser.getLayoutParams();
             layoutParams.height = 0;
             disp4Cuser.setLayoutParams(layoutParams);
+            //msg
+            message.setVisibility(View.VISIBLE);
         }
         //saved
         saved.setOnClickListener(v -> {
@@ -154,6 +160,15 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(getActivity(), StartActivity.class));
         });
 
+        //message
+        btnMsg.setOnClickListener(v -> {
+            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment_activity_dashboard, new MessageFragment(userId))
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         return root;
     }

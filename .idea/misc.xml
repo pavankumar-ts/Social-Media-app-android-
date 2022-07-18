@@ -36,6 +36,7 @@
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_home.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_like_disp.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_likes_disp.xml" value="0.21621621621621623" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_message.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_notifications.xml" value="0.25" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_post.xml" value="0.25" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_profile.xml" value="0.21621621621621623" />
@@ -46,6 +47,10 @@
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_comment.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_home.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_likes.xml" value="0.21621621621621623" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_msg_left.xml" value="0.21621621621621623" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_msg_right.xml" value="0.264" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_msg_sender.xml" value="0.21621621621621623" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_receiver.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25" />
       </map>
     </option>
