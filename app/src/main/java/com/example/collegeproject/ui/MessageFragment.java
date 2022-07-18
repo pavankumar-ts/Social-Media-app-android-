@@ -1,9 +1,12 @@
 package com.example.collegeproject.ui;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
@@ -16,14 +19,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.collegeproject.Model.ModelMsg;
+import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.adapter.MsgAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,15 +53,16 @@ public class MessageFragment extends Fragment {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     //message ref
     DatabaseReference messageRef = database.getReference("message");
+
     //user
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String Cuid = user.getUid();
 
     String RuserId;
 
-    TextView tv;
+    TextView msgName;
     EditText msg;
-    ImageView postMsg;
+    ImageView postMsg, msgDp;
     RecyclerView recyclerView;
     MsgAdapter adapter;
 
@@ -91,6 +101,9 @@ public class MessageFragment extends Fragment {
 
         postMsg = view.findViewById(R.id.postMsg);
         msg = view.findViewById(R.id.msgText);
+        msgName = view.findViewById(R.id.msgName);
+        msgDp = view.findViewById(R.id.msgDp);
+
 
 
         //recyclerView
@@ -105,7 +118,26 @@ public class MessageFragment extends Fragment {
                         .build();
         adapter = new MsgAdapter(options, RuserId);
         recyclerView.setAdapter(adapter);
-        recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
+
+        //user DB ref
+        DatabaseReference userDb = database.getReference().child("userProfile").child(RuserId);
+        //Name
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserProfile userData = dataSnapshot.getValue(UserProfile.class);
+                msgName.setText(userData.getName());
+                Glide.with(msgDp.getContext()).load(userData.getUri()).into(msgDp);
+                // ..
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        userDb.addValueEventListener(postListener);
 
 
         postMsg.setOnClickListener(v -> {
@@ -122,15 +154,13 @@ public class MessageFragment extends Fragment {
                 messageRef.push().setValue(msgData);
                 msg.setText("");
                 adapter.notifyDataSetChanged();
-                recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
+                recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
 
             } else {
                 Toast.makeText(getContext(), "plaese type the message..!", Toast.LENGTH_SHORT).show();
             }
         });
 
-
-        //.....
 
         return view;
     }

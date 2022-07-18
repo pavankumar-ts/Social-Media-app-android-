@@ -1,5 +1,8 @@
 package com.example.collegeproject.adapter;
 
+import static android.content.ContentValues.TAG;
+
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.collegeproject.Model.ModelMsg;
+import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -25,17 +30,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Tag;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 public class MsgAdapter extends FirebaseRecyclerAdapter<ModelMsg, MsgAdapter.MyViewHolder> {
     private static final int MSG_TYPR_LEFT = 0;
     private static final int MSG_TYPR_RIGHT = 1;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String Cuid = user.getUid();
     String Ruid;
-
-    Boolean sender = false;
-    //DB
-    private DatabaseReference userDB;
-    private Query messageDB;
+    //database
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     public MsgAdapter(@NonNull FirebaseRecyclerOptions<ModelMsg> options, String ruserId) {
         super(options);
@@ -44,9 +49,33 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<ModelMsg, MsgAdapter.MyV
 
     @Override
     protected void onBindViewHolder(@NonNull MsgAdapter.MyViewHolder holder, int position, @NonNull ModelMsg model) {
-        if (Ruid.equals(model.getReceiver()) && Cuid.equals(model.getSender()) || Cuid.equals(model.getReceiver()) && Ruid.equals(model.getSender()) ) {
+        if (Ruid.equals(model.getReceiver()) && Cuid.equals(model.getSender()) || Cuid.equals(model.getReceiver()) && Ruid.equals(model.getSender())) {
             holder.msg.setText(model.getText());
-        }else {
+            //user DB ref
+            DatabaseReference userDb = database.getReference().child("userProfile").child(model.getSender());
+            //Name
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserProfile userData = dataSnapshot.getValue(UserProfile.class);
+                    Glide.with(holder.dp.getContext()).load(userData.getUri()).into(holder.dp);
+                    // ..
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                }
+            };
+            userDb.addValueEventListener(postListener);
+            //time
+            Calendar timeStamp = Calendar.getInstance(Locale.ENGLISH);
+            timeStamp.setTimeInMillis(Long.parseLong(String.valueOf(model.getTimeStamp())));
+            String timedate = DateFormat.format("dd/MM/yyyy hh:mm", timeStamp).toString();
+            holder.timeDisp.setText(timedate);
+
+        } else {
             holder.msgSingleRow.setVisibility(View.INVISIBLE);
         }
 
@@ -64,6 +93,7 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<ModelMsg, MsgAdapter.MyV
             return new MyViewHolder(view);
         }
     }
+
     @Override
     public int getItemCount() {
         return super.getItemCount();
@@ -80,7 +110,7 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<ModelMsg, MsgAdapter.MyV
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView dp;
-        TextView msg;
+        TextView msg, timeDisp;
         LinearLayout msgSingleRow;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -88,6 +118,7 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<ModelMsg, MsgAdapter.MyV
             dp = itemView.findViewById(R.id.dp);
             msg = itemView.findViewById(R.id.msg);
             msgSingleRow = itemView.findViewById(R.id.msgSingleRow);
+            timeDisp = itemView.findViewById(R.id.timeDisp);
         }
     }
 }
