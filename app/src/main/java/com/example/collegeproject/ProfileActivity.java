@@ -49,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     //current user id
     String Cuid = user.getUid();
-
+    String tag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,28 +62,40 @@ public class ProfileActivity extends AppCompatActivity {
         bio = findViewById(R.id.bio);
         dob = findViewById(R.id.dob);
         btnUplaod = findViewById(R.id.btnProfileUplaod);
+        Intent intent=getIntent();
+        tag = intent.getStringExtra("tag");
+        Toast.makeText(this, "tag: "+tag, Toast.LENGTH_SHORT).show();
+        Log.d("tag",tag);
+        if (tag == "register"){
+            userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(Cuid);
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
 
-        userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(Cuid);
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
 
-                Glide.with(imageView.getContext()).load(userProfile.getUri()).into(imageView);
-                name.setText(userProfile.getName());
-                dob.setText(userProfile.getDob());
-                bio.setText(userProfile.getBio());
-                // ..
-            }
+                    if(userProfile.getUri() != null){
+                        Glide.with(imageView.getContext()).load(userProfile.getUri()).into(imageView);
+                        name.setText(userProfile.getName());
+                        dob.setText(userProfile.getDob());
+                        bio.setText(userProfile.getBio());
+                        Log.d("not null",userProfile.getUri());
+                    }
+                    // ..
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.e("firebase", "Error getting data", databaseError.toException());
-            }
-        };
-        userDB.addValueEventListener(postListener);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.e("firebase", "Error getting data", databaseError.toException());
+                }
+            };
+            userDB.addValueEventListener(postListener);
+        }
+
+
+
 
         addImg.setOnClickListener(v -> {
             selectImage();

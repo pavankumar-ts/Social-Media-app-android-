@@ -100,9 +100,10 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success"+user);
                             Toast.makeText(RegisterActivity.this, "Registered User " + user.getEmail(), Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.INVISIBLE);
-                            Intent mainIntent = new Intent(RegisterActivity.this, ProfileActivity.class);
-                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(mainIntent);
+                            Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
+                            intent.putExtra("tag", "register");
+//                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
