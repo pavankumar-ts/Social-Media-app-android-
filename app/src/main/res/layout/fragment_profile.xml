@@ -21,9 +21,10 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profileDp"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="10dp"
                 android:background="@drawable/ic_baseline_person_black_24"
                 android:contentDescription="@string/dp"
                 android:scaleType="centerCrop"
@@ -33,44 +34,82 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:gravity="center">
 
-                <TextView
-                    android:id="@+id/profileName"
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/name"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/profileDob"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/dob" />
-
-                <ScrollView
-                    android:id="@+id/SCROLLER_ID"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fillViewport="true"
-                    android:scrollbars="vertical">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/profileBio"
-                        android:layout_width="match_parent"
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxHeight="40dp"
-                        android:scrollbars="vertical"
-                        android:text="@string/bio"
-                        android:textSize="20sp" />
-                </ScrollView>
+                        android:text="following" />
 
+                    <TextView
+                        android:id="@+id/followingCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0" />
+                </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="followers" />
+
+                    <TextView
+                        android:id="@+id/followerCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0" />
+                </LinearLayout>
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/name"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/profileDob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/dob" />
+
+            <TextView
+                android:id="@+id/profileBio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="40dp"
+                android:scrollbars="vertical"
+                android:text="@string/bio"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -142,15 +181,26 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/message"
+            android:id="@+id/nonCurrentUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnFollow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="#C6C9CF"
+                android:text="follow"
+                android:textColor="@color/purple_700" />
 
             <Button
                 android:id="@+id/btnMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
                 android:backgroundTint="#C6C9CF"
                 android:text="Message"
                 android:textColor="@color/purple_700" />

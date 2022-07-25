@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.example.collegeproject.ui.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/single_row_post" />
+        tools:layout="@layout/single_row_post" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_post"

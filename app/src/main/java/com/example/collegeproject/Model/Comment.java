@@ -2,10 +2,10 @@ package com.example.collegeproject.Model;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
-public class ModelComment {
+public class Comment {
     String postId, userId,commentsText, timeStamp;
 
-    public ModelComment() {
+    public Comment() {
     }
 
 
@@ -41,7 +41,7 @@ public class ModelComment {
         this.timeStamp = timeStamp;
     }
 
-    public ModelComment(String postId, String userId, String commentsText, String timeStamp) {
+    public Comment(String postId, String userId, String commentsText, String timeStamp) {
         this.postId = postId;
         this.userId = userId;
         this.commentsText = commentsText;

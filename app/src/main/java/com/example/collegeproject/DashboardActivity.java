@@ -60,9 +60,5 @@ public class DashboardActivity extends AppCompatActivity {
 
         }
     }
-//    @Override
-//    protected void onUserLeaveHint() {
-//        super.onBackPressed();
-//    }
 
 }

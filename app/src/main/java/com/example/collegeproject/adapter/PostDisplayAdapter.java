@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import com.example.collegeproject.Model.ModelPost;
+import com.example.collegeproject.Model.Post;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.ui.CommentsDispFragment;
@@ -44,14 +44,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostDisplayAdapter.MyViewHolder> {
+public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDisplayAdapter.MyViewHolder> {
     String fragment;
     //fragments
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     String name, dp;
 
-    public PostDisplayAdapter(@NonNull FirebaseRecyclerOptions<ModelPost> options, String fragment) {
+    public PostDisplayAdapter(@NonNull FirebaseRecyclerOptions<Post> options, String fragment) {
         super(options);
         this.fragment = fragment;
 
@@ -68,7 +68,7 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostD
 
     @SuppressLint("SetTextI18n")
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull ModelPost model) {
+    protected void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull Post model) {
         userProfileDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(model.getUserId());
         //adding data into Views like TextView, imageView
         ValueEventListener profileListener = new ValueEventListener() {
@@ -97,15 +97,13 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostD
 
                 //Dp & name onclick
                 holder.profileNav.setOnClickListener(v -> {
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    //....
+                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                        //....
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.nav_host_fragment_activity_dashboard, new ProfileFragment("HomeFragment", model.getUserId()), "fragments")
+                                .add(R.id.nav_host_fragment_activity_dashboard, new ProfileFragment("HomeFragment", model.getUserId()), "fragments")
                                 .addToBackStack(null)
                                 .commit();
-                        Toast.makeText(v.getContext(), " not home ", Toast.LENGTH_SHORT).show();
-
                 });
 
                 //like imageView
@@ -244,11 +242,11 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<ModelPost, PostD
                 holder.comments.setOnClickListener(v -> {
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
                     //....
-                        activity.getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.nav_host_fragment_activity_dashboard, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
-                                .addToBackStack(null)
-                                .commit();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.nav_host_fragment_activity_dashboard, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
+                            .addToBackStack(null)
+                            .commit();
                     //...
 
                 });

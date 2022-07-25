@@ -1,6 +1,5 @@
 package com.example.collegeproject.adapter;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,32 +11,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.collegeproject.Model.ModelLikes;
-import com.example.collegeproject.Model.ModelPost;
+import com.example.collegeproject.Model.Likes;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
-import com.example.collegeproject.ui.LikeDispFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class LikesAdapter extends FirebaseRecyclerAdapter<ModelLikes, LikesAdapter.MyViewHolder>{
+public class LikesAdapter extends FirebaseRecyclerAdapter<Likes, LikesAdapter.MyViewHolder>{
     private DatabaseReference userDB;
 
-    public LikesAdapter(@NonNull FirebaseRecyclerOptions<ModelLikes> options) {
+    public LikesAdapter(@NonNull FirebaseRecyclerOptions<Likes> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull ModelLikes model) {
+    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Likes model) {
         //fetech DP from userProfile collection
         userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(model.getUserId());
         ValueEventListener postListener = new ValueEventListener() {

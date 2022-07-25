@@ -1,14 +1,15 @@
 package com.example.collegeproject.Model;
 
-public class ModelLikes {
-    String postId, userId;
+public class SavedPost {
+    String postId, userId, savedUserId;
 
-    ModelLikes(){
-
+    public SavedPost() {
     }
-    public ModelLikes(String postId, String userId) {
+
+    public SavedPost(String postId, String userId, String savedUserId) {
         this.postId = postId;
         this.userId = userId;
+        this.savedUserId = savedUserId;
     }
 
     public String getPostId() {
@@ -27,5 +28,11 @@ public class ModelLikes {
         this.userId = userId;
     }
 
+    public String getSavedUserId() {
+        return savedUserId;
+    }
 
+    public void setSavedUserId(String savedUserId) {
+        this.savedUserId = savedUserId;
+    }
 }

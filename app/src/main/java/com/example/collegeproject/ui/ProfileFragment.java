@@ -20,7 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.collegeproject.Model.ModelPost;
+import com.example.collegeproject.Model.Follow;
+import com.example.collegeproject.Model.Post;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.ProfileActivity;
 import com.example.collegeproject.R;
@@ -34,7 +35,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileFragment extends Fragment {
 
@@ -44,13 +49,13 @@ public class ProfileFragment extends Fragment {
     // ...auth
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    TextView name, dob, bio;
-    Button btnEdit, btnMsg;
+    TextView name, dob, bio, followingCount, followerCount;
+    Button btnEdit, btnMsg, btnFollow;
     ImageView dp;
     LinearLayout logout;
     RecyclerView recyclerView;
     PostDisplayAdapter adapter;
-    LinearLayout saved, disp4Cuser, message;
+    LinearLayout saved, disp4Cuser, nonCurrentUser;
 
     String Cuid = user.getUid();
     String fragment, userId;
@@ -79,8 +84,11 @@ public class ProfileFragment extends Fragment {
         saved = binding.saved;
         logout = binding.logout;
         disp4Cuser = binding.disp4Cuser;
-        message = binding.message;
+        nonCurrentUser = binding.nonCurrentUser;
         btnMsg = binding.btnMsg;
+        btnFollow = binding.btnFollow;
+        followingCount = binding.btnFollow;
+        followerCount = binding.followerCount;
 
         //ref
         DatabaseReference userDbRef = database.getReference().child("userProfile").child(userId);
@@ -109,9 +117,9 @@ public class ProfileFragment extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        FirebaseRecyclerOptions<ModelPost> options =
-                new FirebaseRecyclerOptions.Builder<ModelPost>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("userId").equalTo(userId), ModelPost.class)
+        FirebaseRecyclerOptions<Post> options =
+                new FirebaseRecyclerOptions.Builder<Post>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("userId").equalTo(userId), Post.class)
                         .build();
 
         adapter = new PostDisplayAdapter(options, "ProfileFragment");
@@ -125,16 +133,16 @@ public class ProfileFragment extends Fragment {
             //save, logOut, edit
             disp4Cuser.setVisibility(View.VISIBLE);
             //msg
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) message.getLayoutParams();
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) nonCurrentUser.getLayoutParams();
             layoutParams.height = 0;
-            message.setLayoutParams(layoutParams);
-        }else {
+            nonCurrentUser.setLayoutParams(layoutParams);
+        } else {
             //save, logOut, edit
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) disp4Cuser.getLayoutParams();
             layoutParams.height = 0;
             disp4Cuser.setLayoutParams(layoutParams);
             //msg
-            message.setVisibility(View.VISIBLE);
+            nonCurrentUser.setVisibility(View.VISIBLE);
         }
         //saved
         saved.setOnClickListener(v -> {
@@ -149,6 +157,7 @@ public class ProfileFragment extends Fragment {
         //btnEdit
         btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            intent.putExtra("tag", "profile edit");
             startActivity(intent);
 
         });
@@ -160,7 +169,7 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(getActivity(), StartActivity.class));
         });
 
-        //message
+        //message button
         btnMsg.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
             activity.getSupportFragmentManager()
@@ -168,6 +177,45 @@ public class ProfileFragment extends Fragment {
                     .replace(R.id.nav_host_fragment_activity_dashboard, new MessageFragment(userId))
                     .addToBackStack(null)
                     .commit();
+        });
+
+
+        //follow button
+        //db ref
+        DatabaseReference followDbRef = database.getReference().child("follow");
+        Query followerQuery = followDbRef.child(Cuid + userId);
+        ValueEventListener followerQueryListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                Follow post = dataSnapshot.getValue(Follow.class);
+                if (post != null) {
+                    btnFollow.setText("Following");
+                }
+                // ..
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        followerQuery.addValueEventListener(followerQueryListener);
+
+        btnFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (btnFollow.getText().equals("follow")) {
+                    Map<Object, String> hashMap = new HashMap<>();
+                    hashMap.put("follower", Cuid);
+                    hashMap.put("following", userId);
+                    followDbRef.child(Cuid + userId).setValue(hashMap);
+                } else {
+                    followDbRef.child(Cuid + userId).removeValue();
+                    btnFollow.setText("follow");
+                }
+            }
         });
 
         return root;

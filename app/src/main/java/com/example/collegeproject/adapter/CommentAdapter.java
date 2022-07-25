@@ -12,14 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.collegeproject.Model.ModelComment;
-import com.example.collegeproject.Model.ModelPost;
+import com.example.collegeproject.Model.Comment;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,16 +26,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class CommentAdapter extends FirebaseRecyclerAdapter<ModelComment, CommentAdapter.MyViewHolder> {
+public class CommentAdapter extends FirebaseRecyclerAdapter<Comment, CommentAdapter.MyViewHolder> {
     //firebase
     private DatabaseReference userDB;
 
-    public CommentAdapter(@NonNull FirebaseRecyclerOptions<ModelComment> options) {
+    public CommentAdapter(@NonNull FirebaseRecyclerOptions<Comment> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull CommentAdapter.MyViewHolder holder, int position, @NonNull ModelComment model) {
+    protected void onBindViewHolder(@NonNull CommentAdapter.MyViewHolder holder, int position, @NonNull Comment model) {
         //fetech DP from userProfile collection
         String commentedUser = model.getUserId();
         userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(commentedUser);

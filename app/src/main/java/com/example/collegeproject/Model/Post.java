@@ -1,7 +1,7 @@
 package com.example.collegeproject.Model;
 
-public class ModelPost {
-    ModelPost(){
+public class Post {
+    Post(){
 
     }
 
@@ -79,7 +79,7 @@ public class ModelPost {
         this.userId = userId;
     }
 
-    public ModelPost(String descriptionText, String dpUrl, String imageUrl, String likes, String location, String name, String postId, String timeStamp, String userId) {
+    public Post(String descriptionText, String dpUrl, String imageUrl, String likes, String location, String name, String postId, String timeStamp, String userId) {
         this.descriptionText = descriptionText;
         this.dpUrl = dpUrl;
         this.imageUrl = imageUrl;

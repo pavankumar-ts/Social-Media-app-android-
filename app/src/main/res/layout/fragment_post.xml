@@ -5,7 +5,6 @@
     android:id="@+id/post"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="40dp"
     android:background="@color/white"
     tools:context=".ui.PostFragment">
 
@@ -25,8 +24,9 @@
 
     <EditText
         android:id="@+id/desc"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:ems="10"
         android:hint="@string/description"
         android:importantForAutofill="no"
@@ -42,8 +42,9 @@
 
     <EditText
         android:id="@+id/loc"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
         android:ems="10"
         android:hint="@string/location"
         android:importantForAutofill="no"

@@ -2,7 +2,6 @@ package com.example.collegeproject.ui;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.collegeproject.Model.ModelLikes;
+import com.example.collegeproject.Model.Likes;
 import com.example.collegeproject.R;
 import com.example.collegeproject.adapter.LikesAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -85,9 +84,9 @@ public class LikeDispFragment extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        FirebaseRecyclerOptions<ModelLikes> options =
-                new FirebaseRecyclerOptions.Builder<ModelLikes>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("likes").orderByChild("postId").equalTo(postId), ModelLikes.class)
+        FirebaseRecyclerOptions<Likes> options =
+                new FirebaseRecyclerOptions.Builder<Likes>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("likes").orderByChild("postId").equalTo(postId), Likes.class)
                         .build();
 
         adapter = new LikesAdapter(options);

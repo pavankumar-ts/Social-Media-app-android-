@@ -2,7 +2,6 @@ package com.example.collegeproject.adapter;
 
 import static android.content.ContentValues.TAG;
 
-import android.nfc.Tag;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.collegeproject.Model.ModelPost;
-import com.example.collegeproject.Model.ModelSavedPost;
+import com.example.collegeproject.Model.Post;
+import com.example.collegeproject.Model.SavedPost;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.ui.CommentsDispFragment;
@@ -41,7 +40,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class SavedPostAdapter extends FirebaseRecyclerAdapter<ModelSavedPost, SavedPostAdapter.MyViewHolder> {
+public class SavedPostAdapter extends FirebaseRecyclerAdapter<SavedPost, SavedPostAdapter.MyViewHolder> {
     //..
     private DatabaseReference userDB;
     private DatabaseReference postDB;
@@ -56,12 +55,12 @@ public class SavedPostAdapter extends FirebaseRecyclerAdapter<ModelSavedPost, Sa
     //likes ref
     DatabaseReference likesRef = database.getReference("likes");
     DatabaseReference saveRef = database.getReference("saved");
-    public SavedPostAdapter(@NonNull FirebaseRecyclerOptions<ModelSavedPost> options) {
+    public SavedPostAdapter(@NonNull FirebaseRecyclerOptions<SavedPost> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull ModelSavedPost model) {
+    protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull SavedPost model) {
         //fetch DP from userProfile collection
         //fetch userProfile
         userDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(model.getUserId());
@@ -89,7 +88,7 @@ public class SavedPostAdapter extends FirebaseRecyclerAdapter<ModelSavedPost, Sa
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                ModelPost post = dataSnapshot.getValue(ModelPost.class);
+                Post post = dataSnapshot.getValue(Post.class);
 
                 Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
                 calendar.setTimeInMillis(Long.parseLong(post.getTimeStamp()));

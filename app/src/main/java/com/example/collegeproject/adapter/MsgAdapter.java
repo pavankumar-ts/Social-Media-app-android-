@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.collegeproject.Model.ModelMsg;
+import com.example.collegeproject.Model.Msg;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -26,14 +26,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.Tag;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class MsgAdapter extends FirebaseRecyclerAdapter<ModelMsg, MsgAdapter.MyViewHolder> {
+public class MsgAdapter extends FirebaseRecyclerAdapter<Msg, MsgAdapter.MyViewHolder> {
     private static final int MSG_TYPR_LEFT = 0;
     private static final int MSG_TYPR_RIGHT = 1;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -42,13 +40,13 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<ModelMsg, MsgAdapter.MyV
     //database
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    public MsgAdapter(@NonNull FirebaseRecyclerOptions<ModelMsg> options, String ruserId) {
+    public MsgAdapter(@NonNull FirebaseRecyclerOptions<Msg> options, String ruserId) {
         super(options);
         this.Ruid = ruserId;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MsgAdapter.MyViewHolder holder, int position, @NonNull ModelMsg model) {
+    protected void onBindViewHolder(@NonNull MsgAdapter.MyViewHolder holder, int position, @NonNull Msg model) {
         if (Ruid.equals(model.getReceiver()) && Cuid.equals(model.getSender()) || Cuid.equals(model.getReceiver()) && Ruid.equals(model.getSender())) {
             holder.msg.setText(model.getText());
             //user DB ref
@@ -101,7 +99,7 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<ModelMsg, MsgAdapter.MyV
 
     @Override
     public int getItemViewType(int position) {
-        ModelMsg model = getItem(position);
+        Msg model = getItem(position);
         if (model.getSender().equals(Cuid)) {
             return MSG_TYPR_RIGHT;
         }

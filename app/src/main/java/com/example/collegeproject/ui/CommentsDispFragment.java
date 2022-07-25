@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.collegeproject.Model.ModelComment;
+import com.example.collegeproject.Model.Comment;
 import com.example.collegeproject.R;
 import com.example.collegeproject.adapter.CommentAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -90,10 +90,10 @@ public class CommentsDispFragment extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        FirebaseRecyclerOptions<ModelComment> options =
-                new FirebaseRecyclerOptions.Builder<ModelComment>()
+        FirebaseRecyclerOptions<Comment> options =
+                new FirebaseRecyclerOptions.Builder<Comment>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("comments").orderByChild("postId").equalTo(postId)
-                                , ModelComment.class)
+                                , Comment.class)
                         .build();
         adapter = new CommentAdapter(options);
         recyclerView.setAdapter(adapter);

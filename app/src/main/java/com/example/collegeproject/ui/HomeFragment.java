@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.collegeproject.Model.ModelPost;
+import com.example.collegeproject.Model.Post;
 import com.example.collegeproject.adapter.PostDisplayAdapter;
 import com.example.collegeproject.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -38,9 +38,9 @@ public class HomeFragment extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        FirebaseRecyclerOptions<ModelPost> options =
-                new FirebaseRecyclerOptions.Builder<ModelPost>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts"), ModelPost.class)
+        FirebaseRecyclerOptions<Post> options =
+                new FirebaseRecyclerOptions.Builder<Post>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("posts"), Post.class)
                         .build();
         adapter = new PostDisplayAdapter(options, "HomeFragment" );
         recyclerView.setAdapter(adapter);

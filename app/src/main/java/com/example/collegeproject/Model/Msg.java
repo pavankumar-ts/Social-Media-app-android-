@@ -1,12 +1,12 @@
 package com.example.collegeproject.Model;
 
-public class ModelMsg {
+public class Msg {
     String receiver, sender, text, timeStamp;
 
-    public ModelMsg() {
+    public Msg() {
     }
 
-    public ModelMsg(String receiver, String sender, String text, String timeStamp) {
+    public Msg(String receiver, String sender, String text, String timeStamp) {
         this.receiver = receiver;
         this.sender = sender;
         this.text = text;

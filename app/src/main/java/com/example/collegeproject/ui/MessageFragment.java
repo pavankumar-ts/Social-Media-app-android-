@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.collegeproject.Model.ModelMsg;
+import com.example.collegeproject.Model.Msg;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.adapter.MsgAdapter;
@@ -32,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -111,10 +109,10 @@ public class MessageFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        FirebaseRecyclerOptions<ModelMsg> options =
-                new FirebaseRecyclerOptions.Builder<ModelMsg>()
+        FirebaseRecyclerOptions<Msg> options =
+                new FirebaseRecyclerOptions.Builder<Msg>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("message")
-                                , ModelMsg.class)
+                                , Msg.class)
                         .build();
         adapter = new MsgAdapter(options, RuserId);
         recyclerView.setAdapter(adapter);
