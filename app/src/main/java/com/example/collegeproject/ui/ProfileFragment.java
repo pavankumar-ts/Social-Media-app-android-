@@ -46,6 +46,7 @@ public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
     //DB
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private Query followerDb, followingDb;
     // ...auth
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -55,7 +56,7 @@ public class ProfileFragment extends Fragment {
     LinearLayout logout;
     RecyclerView recyclerView;
     PostDisplayAdapter adapter;
-    LinearLayout saved, disp4Cuser, nonCurrentUser;
+    LinearLayout saved, disp4Cuser, nonCurrentUser, following, follower;
 
     String Cuid = user.getUid();
     String fragment, userId;
@@ -87,8 +88,10 @@ public class ProfileFragment extends Fragment {
         nonCurrentUser = binding.nonCurrentUser;
         btnMsg = binding.btnMsg;
         btnFollow = binding.btnFollow;
-        followingCount = binding.btnFollow;
+        followingCount = binding.followingCount;
         followerCount = binding.followerCount;
+        follower = binding.follower;
+        following = binding.following;
 
         //ref
         DatabaseReference userDbRef = database.getReference().child("userProfile").child(userId);
@@ -144,6 +147,41 @@ public class ProfileFragment extends Fragment {
             //msg
             nonCurrentUser.setVisibility(View.VISIBLE);
         }
+
+        //display number of follower
+        followerCount.setText("0");
+        followerDb = database.getReference().child("follow").orderByChild("followed").equalTo(userId);
+        ValueEventListener followDbListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                followerCount.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("firebase", "Error getting data", databaseError.toException());
+            }
+        };
+        followerDb.addValueEventListener(followDbListener);
+
+        //display number of following
+        followerDb = database.getReference().child("follow").orderByChild("follower").equalTo(userId);
+        ValueEventListener followingDbListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                followingCount.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.e("firebase", "Error getting data", databaseError.toException());
+            }
+        };
+        followerDb.addValueEventListener(followingDbListener);
+
+
         //saved
         saved.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
@@ -209,7 +247,7 @@ public class ProfileFragment extends Fragment {
                 if (btnFollow.getText().equals("follow")) {
                     Map<Object, String> hashMap = new HashMap<>();
                     hashMap.put("follower", Cuid);
-                    hashMap.put("following", userId);
+                    hashMap.put("followed", userId);
                     followDbRef.child(Cuid + userId).setValue(hashMap);
                 } else {
                     followDbRef.child(Cuid + userId).removeValue();
@@ -217,6 +255,34 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+
+        //onclick disp followers
+        follower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                //....
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.nav_host_fragment_activity_dashboard, new FollowersFragment(userId, Cuid), "ProfileFragments")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+        //onclick disp following
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                //....
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.nav_host_fragment_activity_dashboard, new FollowingFragment(userId, Cuid), "ProfileFragments")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
 
         return root;
     }

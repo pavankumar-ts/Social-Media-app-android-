@@ -33,6 +33,8 @@
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_comments_disp.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_dashboard.xml" value="0.25" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_demo.xml" value="0.20405405405405405" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_followers.xml" value="0.21621621621621623" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_following.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_home.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_like_disp.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/fragment_likes_disp.xml" value="0.21621621621621623" />
@@ -45,6 +47,7 @@
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/likes_view.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/search_fragment.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_comment.xml" value="0.21621621621621623" />
+        <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_follow.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_home.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_likes.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/pavan/AndroidStudioProjects/CollegeProject3/app/src/main/res/layout/single_row_msg_left.xml" value="0.21621621621621623" />

@@ -1,13 +1,13 @@
 package com.example.collegeproject.Model;
 
 public class Follow {
-    String follower, following;
+    String follower, followed;
     public Follow() {
     }
 
-    public Follow(String follower, String following) {
+    public Follow(String follower, String followed) {
         this.follower = follower;
-        this.following = following;
+        this.followed = followed;
     }
 
     public String getFollower() {
@@ -18,11 +18,11 @@ public class Follow {
         this.follower = follower;
     }
 
-    public String getFollowing() {
-        return following;
+    public String getFollowed() {
+        return followed;
     }
 
-    public void setFollowing(String following) {
-        this.following = following;
+    public void setFollowed(String followed) {
+        this.followed = followed;
     }
 }

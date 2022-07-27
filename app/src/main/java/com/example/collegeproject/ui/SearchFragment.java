@@ -32,11 +32,7 @@ public class SearchFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.search_fragment, container, false);
 
-        TextView tv = view.findViewById(R.id.sTv);
-        tv.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController( getActivity(), R.id.nav_host_fragment_activity_dashboard);
-            navController.navigate(R.id.action_navigation_search_to_commentsDispFragment);
-        });
+
         return view;
     }
 
