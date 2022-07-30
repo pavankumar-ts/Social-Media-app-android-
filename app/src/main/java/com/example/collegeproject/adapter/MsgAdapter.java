@@ -74,7 +74,8 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<Msg, MsgAdapter.MyViewHo
             holder.timeDisp.setText(timedate);
 
         } else {
-            holder.msgSingleRow.setVisibility(View.INVISIBLE);
+            holder.msgSingleRow.setVisibility(View.GONE);
+            holder.msgSingleRow.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
         }
 
     }

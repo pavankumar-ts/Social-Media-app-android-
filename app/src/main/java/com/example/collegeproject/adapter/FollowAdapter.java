@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,11 +27,12 @@ import com.google.firebase.database.ValueEventListener;
 
 public class FollowAdapter  extends FirebaseRecyclerAdapter<Follow, FollowAdapter.MyViewHolder> {
     private DatabaseReference userDB;
-    String followOption, userId;
+    String followOption, userId, fragment;
 
-    public FollowAdapter(@NonNull FirebaseRecyclerOptions<Follow> options, String followOption) {
+    public FollowAdapter(@NonNull FirebaseRecyclerOptions<Follow> options, String followOption, String fragment) {
         super(options);
         this.followOption = followOption;
+        this.fragment = fragment;
     }
 
     @Override
@@ -76,11 +76,26 @@ public class FollowAdapter  extends FirebaseRecyclerAdapter<Follow, FollowAdapte
 
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 //....
-                activity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.nav_host_fragment_activity_dashboard, new ProfileFragment("HomeFragment", getUserId), "FollowFragments")
-                        .addToBackStack(null)
-                        .commit();
+                if (fragment == "HomeFragment"){
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.home, new ProfileFragment("HomeFragment", getUserId), "HomeFragment")
+                            .addToBackStack(null)
+                            .commit();
+                }if (fragment == "SearchFragment"){
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.Fsearch, new ProfileFragment("SearchFragment", getUserId), "SearchFragment")
+                            .addToBackStack(null)
+                            .commit();
+                }else {
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.Fprofile, new ProfileFragment("ProfileFragment", getUserId), "otherFragment")
+                            .addToBackStack(null)
+                            .commit();
+                }
+
             }
         });
     }
@@ -94,7 +109,7 @@ public class FollowAdapter  extends FirebaseRecyclerAdapter<Follow, FollowAdapte
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_row_follow, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_row_dp_name, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -105,9 +120,9 @@ public class FollowAdapter  extends FirebaseRecyclerAdapter<Follow, FollowAdapte
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            dp = itemView.findViewById(R.id.followDp);
-            name = itemView.findViewById(R.id.followName);
-            cvFollow = itemView.findViewById(R.id.cvFollow);
+            dp = itemView.findViewById(R.id.Dp);
+            name = itemView.findViewById(R.id.Name);
+            cvFollow = itemView.findViewById(R.id.cvDpName);
         }
     }
 }

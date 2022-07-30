@@ -125,7 +125,7 @@ public class ProfileFragment extends Fragment {
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("posts").orderByChild("userId").equalTo(userId), Post.class)
                         .build();
 
-        adapter = new PostDisplayAdapter(options, "ProfileFragment");
+        adapter = new PostDisplayAdapter(options, fragment);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(null);
         adapter.notifyDataSetChanged();
@@ -261,12 +261,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.Fprofile, new FollowersFragment(userId, Cuid, "ProfileFragment"), "ProfileFragment")
+                            .addToBackStack(null)
+                            .commit();
+
                 //....
-                activity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.nav_host_fragment_activity_dashboard, new FollowersFragment(userId, Cuid), "ProfileFragments")
-                        .addToBackStack(null)
-                        .commit();
+
             }
         });
         //onclick disp following
@@ -275,11 +277,26 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 //....
+                if (fragment == "HomeFragment"){
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.home, new FollowingFragment(userId, Cuid, "HomeFragment"), "SearchFragment")
+                            .addToBackStack(null)
+                            .commit();
+                }
+            if (fragment == "SearchFragment"){
                 activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .add(R.id.nav_host_fragment_activity_dashboard, new FollowingFragment(userId, Cuid), "ProfileFragments")
+                        .add(R.id.Fsearch, new FollowingFragment(userId, Cuid, "SearchFragment"), "SearchFragment")
                         .addToBackStack(null)
                         .commit();
+            }else {
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.Fprofile, new FollowingFragment(userId, Cuid, "ProfileFragments"), "ProfileFragments")
+                        .addToBackStack(null)
+                        .commit();
+            }
             }
         });
 

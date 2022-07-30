@@ -35,4 +35,5 @@
     <string name="image">image</string>
     <string name="profile_of_liked_users">Profile of Liked Users</string>
     <string name="saved_post">Saved post</string>
+    <string name="search_for_users">Search for users</string>
 </resources>

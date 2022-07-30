@@ -26,7 +26,11 @@
         android:id="@+id/navigation_search"
         android:name="com.example.collegeproject.ui.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/search_fragment" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_navigation_search_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
     <fragment
         android:id="@+id/commentsDispFragment"
         android:name="com.example.collegeproject.ui.CommentsDispFragment"

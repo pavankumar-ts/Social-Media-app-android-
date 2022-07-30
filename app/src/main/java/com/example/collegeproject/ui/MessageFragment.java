@@ -106,7 +106,7 @@ public class MessageFragment extends Fragment {
 
         //recyclerView
         recyclerView = view.findViewById(R.id.messageRecyclerView);
-        recyclerView.setHasFixedSize(true);
+//        recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         FirebaseRecyclerOptions<Msg> options =

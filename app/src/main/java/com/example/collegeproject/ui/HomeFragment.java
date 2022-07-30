@@ -11,18 +11,24 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.collegeproject.Model.Follow;
 import com.example.collegeproject.Model.Post;
-import com.example.collegeproject.adapter.PostDisplayAdapter;
+import com.example.collegeproject.adapter.HomeAdapter;
 import com.example.collegeproject.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     RecyclerView recyclerView;
-    PostDisplayAdapter adapter;
+    HomeAdapter adapter;
 
+    //current user
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String Cuid = user.getUid();
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -42,7 +48,7 @@ public class HomeFragment extends Fragment {
                 new FirebaseRecyclerOptions.Builder<Post>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("posts"), Post.class)
                         .build();
-        adapter = new PostDisplayAdapter(options, "HomeFragment" );
+        adapter = new HomeAdapter(options, "HomeFragment" );
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

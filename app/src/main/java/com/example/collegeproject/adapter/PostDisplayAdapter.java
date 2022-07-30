@@ -97,13 +97,15 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
 
                 //Dp & name onclick
                 holder.profileNav.setOnClickListener(v -> {
-                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        //....
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    //....
+                    if (fragment == "HomeFragment") {
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
-                                .add(R.id.nav_host_fragment_activity_dashboard, new ProfileFragment("HomeFragment", model.getUserId()), "fragments")
+                                .add(R.id.home, new ProfileFragment("HomeFragment", model.getUserId()), "fragments")
                                 .addToBackStack(null)
                                 .commit();
+                    }
                 });
 
                 //like imageView
@@ -241,13 +243,25 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                 //open comments fragment
                 holder.comments.setOnClickListener(v -> {
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    //....
+                    if (fragment == "HomeFragment"){
                     activity.getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.nav_host_fragment_activity_dashboard, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
+                            .replace(R.id.home, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
                             .addToBackStack(null)
                             .commit();
-                    //...
+                    } if (fragment == "SearchFragment"){
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.Fsearch, new CommentsDispFragment(model.getPostId(), "SearchFragment"), "fragments")
+                                .addToBackStack(null)
+                                .commit();
+                    }else {
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.Fprofile, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
+                                .addToBackStack(null)
+                                .commit();
+                    }
 
                 });
                 //likesCount onclickListener
@@ -256,12 +270,20 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                     if (likeCheckZero != 0) {
                         //fragment switching
                         AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        activity.getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.home, new LikeDispFragment(model.getPostId()))
-                                .addToBackStack("back")
-                                .commit();
-                        Log.i(TAG, "onBindViewHolder: " + model.getLikes());
+                        if (fragment == "HomeFragment"){
+                            activity.getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.home, new LikeDispFragment(model.getPostId()))
+                                    .addToBackStack("back")
+                                    .commit();
+                        }else {
+                            activity.getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.Fprofile, new LikeDispFragment(model.getPostId()))
+                                    .addToBackStack("back")
+                                    .commit();
+                        }
+
                     } else {
                         Toast.makeText(v.getContext(), "zero Likes", Toast.LENGTH_SHORT).show();
                     }

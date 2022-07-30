@@ -23,7 +23,7 @@ public class FollowersFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
 
-    String userId, Cuid;
+    String userId, Cuid, fragment;
     RecyclerView recyclerView;
     FollowAdapter adapter;
 
@@ -35,9 +35,10 @@ public class FollowersFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public FollowersFragment(String userId, String cuid) {
+    public FollowersFragment(String userId, String cuid, String fragment) {
         this.Cuid = cuid;
         this.userId = userId;
+        this.fragment = fragment;
 
     }
 
@@ -76,7 +77,7 @@ public class FollowersFragment extends Fragment {
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("follow").orderByChild("followed").equalTo(userId), Follow.class)
                         .build();
 
-        adapter = new FollowAdapter(options, "followed");
+        adapter = new FollowAdapter(options, "followed", fragment);
         recyclerView.setAdapter(adapter);
 //        recyclerView.setItemAnimator(null);
         adapter.notifyDataSetChanged();

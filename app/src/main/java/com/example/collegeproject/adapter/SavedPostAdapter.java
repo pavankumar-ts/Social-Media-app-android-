@@ -110,7 +110,7 @@ public class SavedPostAdapter extends FirebaseRecyclerAdapter<SavedPost, SavedPo
                     //....
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.nav_host_fragment_activity_dashboard, new ProfileFragment("ProfileFragment", post.getUserId()), "fragments")
+                                .replace(R.id.Fprofile, new ProfileFragment("ProfileFragment", post.getUserId()), "fragments")
                                 .addToBackStack(null)
                                 .commit();
                         Toast.makeText(v.getContext(), " not home ", Toast.LENGTH_SHORT).show();
@@ -219,7 +219,7 @@ public class SavedPostAdapter extends FirebaseRecyclerAdapter<SavedPost, SavedPo
                     //....
                     activity.getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.nav_host_fragment_activity_dashboard, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
+                            .replace(R.id.Fprofile, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
                             .addToBackStack(null)
                             .commit();
                     //...
@@ -233,7 +233,7 @@ public class SavedPostAdapter extends FirebaseRecyclerAdapter<SavedPost, SavedPo
                         AppCompatActivity activity = (AppCompatActivity) v.getContext();
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.nav_host_fragment_activity_dashboard, new LikeDispFragment(model.getPostId()))
+                                .replace(R.id.Fprofile, new LikeDispFragment(model.getPostId()))
                                 .addToBackStack("back")
                                 .commit();
                         Log.i(TAG, "onBindViewHolder: " + post.getLikes());
