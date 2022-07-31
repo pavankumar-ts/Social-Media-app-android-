@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.collegeproject.Model.Follow;
 import com.example.collegeproject.Model.Post;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
@@ -65,9 +66,8 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Post, HomeAdapter.MyVie
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                Post post = dataSnapshot.getValue(Post.class);
-                if (post != null) {
+                Follow Follow = dataSnapshot.getValue(Follow.class);
+                if (Follow != null) {
                     userProfileDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(model.getUserId());
                     //adding data into Views like TextView, imageView
                     ValueEventListener profileListener = new ValueEventListener() {

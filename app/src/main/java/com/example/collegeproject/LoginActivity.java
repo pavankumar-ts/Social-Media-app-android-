@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         registerNav = findViewById(R.id.registerNav);
         progressBar = findViewById(R.id.progressBarLogin);
         btnLogin.setOnClickListener(v -> {
-            String txtEmail = email.getText().toString();
+            String txtEmail = email.getText().toString().trim();
             String txtPassword = password.getText().toString();
             if (TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPassword)) {
                 Toast.makeText(getApplicationContext(), "fill the Fields", Toast.LENGTH_SHORT).show();

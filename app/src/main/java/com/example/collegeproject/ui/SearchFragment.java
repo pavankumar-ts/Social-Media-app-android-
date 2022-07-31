@@ -28,7 +28,7 @@ public class SearchFragment extends Fragment {
 
     RecyclerView recyclerView;
     SearchAdapter adapter;
-    String getText;
+    String getText = "0";
     public static SearchFragment newInstance() {
         return new SearchFragment();
     }
@@ -47,6 +47,16 @@ public class SearchFragment extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
+        FirebaseRecyclerOptions<UserProfile> options =
+                new FirebaseRecyclerOptions.Builder<UserProfile>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("userProfile")
+                                .orderByChild("name").startAt(getText).endAt(getText+"\uf8ff"), UserProfile.class)
+                        .build();
+        adapter = new SearchAdapter(options);
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+        adapter.notifyDataSetChanged();
+
 
         text.addTextChangedListener(new TextWatcher() {
             @Override
@@ -95,7 +105,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-//        adapter.startListening();
+        adapter.startListening();
     }
     @Override
     public void onStop() {
