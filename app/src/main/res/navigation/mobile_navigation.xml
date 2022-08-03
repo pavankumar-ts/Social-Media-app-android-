@@ -42,4 +42,8 @@
         tools:layout="@layout/fragment_saved"
         app:popUpTo="@+id/Fprofile"
         app:popUpToInclusive="true"/>
+    <fragment
+        android:id="@+id/navigation_message"
+        android:name="com.example.collegeproject.ui.MessageListFragment"
+        android:label="@string/message" />
 </navigation>

@@ -8,11 +8,15 @@
     <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_baseline_search_24"
-        android:title="Search"/>
+        android:title="@string/search"/>
     <item
         android:id="@+id/navigation_post"
         android:icon="@drawable/ic_baseline_add_to_photos_24"
         android:title="@string/post"/>
+    <item
+        android:id="@+id/navigation_message"
+        android:icon="@drawable/ic_baseline_message_24"
+        android:title="@string/message"/>
 
     <item
         android:id="@+id/navigation_profile"

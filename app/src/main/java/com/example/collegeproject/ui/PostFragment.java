@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,11 +55,13 @@ public class PostFragment extends Fragment {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     StorageReference storageRef;
 
-    Button btnAddImage, btnPost;
+    Button btnAddImage, btnPost, btnAddVideo, playBtn;
     EditText desc, loc;
     ImageView imageView;
-    Uri imageUri;
+    VideoView videoView;
+    Uri imageUri, videoUri, uploadUri;
     ProgressBar progressBar;
+    String checkUri;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,7 +70,9 @@ public class PostFragment extends Fragment {
         View root = binding.getRoot();
         btnAddImage = binding.btnAddImage;
         btnPost = binding.btnPost;
+        btnAddVideo = binding.btnAddVideo;
         imageView = binding.imageViewPost;
+        videoView = binding.videoView;
         progressBar = binding.progressBarPost;
         desc = binding.desc;
         loc = binding.loc;
@@ -76,15 +82,34 @@ public class PostFragment extends Fragment {
         btnPost.setOnClickListener(v -> {
             String txtDesc = desc.getText().toString();
             String txtLoc = loc.getText().toString();
-            if (TextUtils.isEmpty(txtDesc) || TextUtils.isEmpty(txtLoc) || imageUri == null) {
-                Toast.makeText(getContext(), "fill the Fields and Select the image", Toast.LENGTH_SHORT).show();
-            } else {
+            if (TextUtils.isEmpty(txtDesc) || TextUtils.isEmpty(txtLoc)) {
+                Toast.makeText(getContext(), "fill the Fields", Toast.LENGTH_SHORT).show();
+            }
+            else if (imageUri == null && videoUri == null ){
+                Toast.makeText(getContext(), "Select the image", Toast.LENGTH_SHORT).show();
+            }
+            else {
                 uplaod(txtDesc, txtLoc);
             }
         });
+        btnAddVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectVideo();
+            }
+        });
+
         return root;
     }
 
+    private void selectVideo() {
+        Intent i = new Intent();
+        i.setType("video/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(i, 10);
+    }
+
+    //image
     private void selectImage() {
         Intent i = new Intent();
         i.setType("image/*");
@@ -97,14 +122,46 @@ public class PostFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && data != null && data.getData() != null) {
             imageUri = data.getData();
+            Log.d(TAG, "imageUri"+ imageUri);
             imageView.setImageURI(imageUri);
+
+        }
+        if (requestCode == 10 && data != null && data.getData() != null){
+            videoUri = data.getData();
+            Log.d(TAG, "VideoUri"+ videoUri);
+            videoView.setVisibility(View.VISIBLE);
+            videoView.setVideoURI(videoUri);
+            ///.
+
+            MediaController mediaController = new MediaController(getContext());
+
+            // sets the anchor view
+            // anchor view for the videoView
+            mediaController.setAnchorView(videoView);
+
+            // sets the media player to the videoView
+            mediaController.setMediaPlayer(videoView);
+
+            // sets the media controller to the videoView
+            videoView.setMediaController(mediaController);
+
+            // starts the video
+            videoView.start();
         }
     }
 
     private void uplaod(String txtDesc, String txtLoc) {
+
         progressBar.setVisibility(View.VISIBLE);
         storageRef = FirebaseStorage.getInstance().getReference("postImages/" + UUID.randomUUID().toString());
-        storageRef.putFile(imageUri)
+        if (imageUri != null){
+            uploadUri = imageUri;
+            checkUri = "imageUri";
+        }else {
+            uploadUri = videoUri;
+            checkUri = "videoUri";
+        }
+        storageRef.putFile(uploadUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -117,7 +174,11 @@ public class PostFragment extends Fragment {
                                 DatabaseReference reference = database.getReference("posts");
                                 //creating unique postId
                                 String postId = reference.push().getKey();
+                                if (checkUri == "imageUri"){
                                 post.put("imageUrl", uri.toString());
+                                }else {
+                                    post.put("videoUrl", uri.toString());
+                                }
                                 post.put("postId", postId);
                                 post.put("timeStamp", timestamp);
                                 post.put("userId", Cuid);

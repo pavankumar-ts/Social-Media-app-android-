@@ -2,6 +2,7 @@ package com.example.collegeproject.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
@@ -53,11 +57,12 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
 
+
         FirebaseRecyclerOptions<Post> options =
                 new FirebaseRecyclerOptions.Builder<Post>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("posts"), Post.class)
                         .build();
-        adapter = new HomeAdapter(options, "HomeFragment" );
+        adapter = new HomeAdapter(options, "HomeFragment");
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -70,11 +75,13 @@ public class HomeFragment extends Fragment {
         super.onStart();
         adapter.startListening();
     }
+
     @Override
     public void onStop() {
         super.onStop();
         adapter.stopListening();
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

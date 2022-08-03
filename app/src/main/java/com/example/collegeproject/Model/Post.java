@@ -27,8 +27,16 @@ public class Post {
         return imageUrl;
     }
 
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     public String getLikes() {
@@ -79,10 +87,11 @@ public class Post {
         this.userId = userId;
     }
 
-    public Post(String descriptionText, String dpUrl, String imageUrl, String likes, String location, String name, String postId, String timeStamp, String userId) {
+    public Post(String descriptionText, String dpUrl, String imageUrl, String videoUrl, String likes, String location, String name, String postId, String timeStamp, String userId) {
         this.descriptionText = descriptionText;
         this.dpUrl = dpUrl;
         this.imageUrl = imageUrl;
+        this.videoUrl = videoUrl;
         this.likes = likes;
         this.location = location;
         this.name = name;
@@ -91,6 +100,6 @@ public class Post {
         this.userId = userId;
     }
 
-    String descriptionText, dpUrl, imageUrl, likes, location, name, postId, timeStamp, userId;
+    String descriptionText, dpUrl, imageUrl, likes, location, name, postId, timeStamp, userId, videoUrl;
 
 }

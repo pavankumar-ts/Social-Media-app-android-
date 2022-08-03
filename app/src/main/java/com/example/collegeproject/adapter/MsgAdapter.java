@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -22,6 +23,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,6 +59,7 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<Msg, MsgAdapter.MyViewHo
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserProfile userData = dataSnapshot.getValue(UserProfile.class);
                     Glide.with(holder.dp.getContext()).load(userData.getUri()).into(holder.dp);
+
                     // ..
                 }
 
@@ -73,10 +76,13 @@ public class MsgAdapter extends FirebaseRecyclerAdapter<Msg, MsgAdapter.MyViewHo
             String timedate = DateFormat.format("dd/MM/yyyy hh:mm", timeStamp).toString();
             holder.timeDisp.setText(timedate);
 
+
         } else {
             holder.msgSingleRow.setVisibility(View.GONE);
             holder.msgSingleRow.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
         }
+
+
 
     }
 

@@ -13,6 +13,7 @@ public class Msg {
         this.timeStamp = timeStamp;
     }
 
+
     public String getReceiver() {
         return receiver;
     }
@@ -20,6 +21,7 @@ public class Msg {
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
+
 
     public String getSender() {
         return sender;

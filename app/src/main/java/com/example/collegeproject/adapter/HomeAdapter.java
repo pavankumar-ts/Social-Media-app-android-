@@ -91,6 +91,7 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Post, HomeAdapter.MyVie
                             holder.time.setText(timedate);
 
                             //loading image URL to imageView
+                            Log.d(TAG, "image"+model.getImageUrl());
                             Glide.with(holder.postImg.getContext()).load(model.getImageUrl()).into(holder.postImg);
                             Glide.with(holder.userDP.getContext()).load(dp).into(holder.userDP);
 
@@ -324,8 +325,8 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Post, HomeAdapter.MyVie
         //collect the single_row.xml data with help of ID
         ImageView userDP, postImg, likesImg, comments, save;
         TextView name, desc, likesCount, loc, time;
-        LinearLayout profileNav, postView;
-        CardView cvPost;
+        LinearLayout profileNav, postView, cvPost;
+//        CardView cvPost;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);

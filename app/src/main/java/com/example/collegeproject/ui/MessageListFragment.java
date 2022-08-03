@@ -9,46 +9,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.example.collegeproject.Model.Likes;
+import com.example.collegeproject.Model.Msg;
+import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
-import com.example.collegeproject.adapter.LikesAdapter;
+import com.example.collegeproject.adapter.MsgListAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.FirebaseDatabase;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LikeDispFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LikeDispFragment extends Fragment {
+public class MessageListFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    RecyclerView recyclerView;
+    MsgListAdapter adapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    RecyclerView recyclerView;
-    LikesAdapter adapter;
-    ImageView goBack;
-    String postId;
-
-
-    public LikeDispFragment() {
+    public MessageListFragment() {
         // Required empty public constructor
     }
 
-    public LikeDispFragment(String postId) {
-        this.postId = postId;
-    }
-
-    public static LikeDispFragment newInstance(String param1, String param2) {
-        LikeDispFragment fragment = new LikeDispFragment();
+    public static MessageListFragment newInstance(String param1, String param2) {
+        MessageListFragment fragment = new MessageListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -69,30 +55,23 @@ public class LikeDispFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        View view = inflater.inflate(R.layout.fragment_like_disp, container, false);
-
-        //goback;
-        goBack = view.findViewById(R.id.goBack);
-        goBack.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().popBackStack();
-        });
-
-        recyclerView = view.findViewById(R.id.likeRecyclerView);
+        View view = inflater.inflate(R.layout.fragment_message_list, container, false);
+        recyclerView = view.findViewById(R.id.rvMessage);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-        FirebaseRecyclerOptions<Likes> options =
-                new FirebaseRecyclerOptions.Builder<Likes>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("likes").orderByChild("postId").equalTo(postId), Likes.class)
+        FirebaseRecyclerOptions<UserProfile> options =
+                new FirebaseRecyclerOptions.Builder<UserProfile>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("userProfile"), UserProfile.class)
                         .build();
 
-        adapter = new LikesAdapter(options);
+        adapter = new MsgListAdapter(options);
         recyclerView.setAdapter(adapter);
 //        recyclerView.setItemAnimator(null);
         adapter.notifyDataSetChanged();
+
 
         return view;
     }
@@ -107,5 +86,4 @@ public class LikeDispFragment extends Fragment {
         super.onStop();
         adapter.stopListening();
     }
-
 }

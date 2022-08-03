@@ -2,13 +2,21 @@ package com.example.collegeproject.adapter;
 
 import static android.content.ContentValues.TAG;
 
+import static java.security.AccessController.getContext;
+
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import android.text.format.DateFormat;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -92,6 +101,34 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                 holder.time.setText(timedate);
 
                 //loading image URL to imageView
+                if (model.getImageUrl() == null) {
+                    holder.postImg.setVisibility(View.GONE);
+                    holder.videoView.setVisibility(View.VISIBLE);
+                    holder.videoProgress.setVisibility(View.VISIBLE);
+                    String videoPath = model.getVideoUrl();
+                    Uri uri = Uri.parse(videoPath);
+                    holder.videoView.setVideoURI(uri);
+                    holder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.start();
+                            mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+
+                                @Override
+                                public void onVideoSizeChanged(MediaPlayer mp, int arg1, int arg2) {
+                                    // TODO Auto-generated method stub
+                                    Log.e(TAG, "Changed");
+                                    holder.videoProgress.setVisibility(View.GONE);
+                                    mp.start();
+                                    MediaController mediaController = new MediaController(holder.itemView.getContext());
+                                    holder.videoView.setMediaController(mediaController);
+                                    mediaController.setAnchorView(holder.videoView);
+                                }
+                            });
+                        }
+                    });
+
+                }
                 Glide.with(holder.postImg.getContext()).load(model.getImageUrl()).into(holder.postImg);
                 Glide.with(holder.userDP.getContext()).load(dp).into(holder.userDP);
 
@@ -243,19 +280,20 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                 //open comments fragment
                 holder.comments.setOnClickListener(v -> {
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    if (fragment == "HomeFragment"){
-                    activity.getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.home, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
-                            .addToBackStack(null)
-                            .commit();
-                    } if (fragment == "SearchFragment"){
+                    if (fragment == "HomeFragment") {
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.home, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                    if (fragment == "SearchFragment") {
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.Fsearch, new CommentsDispFragment(model.getPostId(), "SearchFragment"), "fragments")
                                 .addToBackStack(null)
                                 .commit();
-                    }else {
+                    } else {
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.Fprofile, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
@@ -270,13 +308,13 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                     if (likeCheckZero != 0) {
                         //fragment switching
                         AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        if (fragment == "HomeFragment"){
+                        if (fragment == "HomeFragment") {
                             activity.getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.home, new LikeDispFragment(model.getPostId()))
                                     .addToBackStack("back")
                                     .commit();
-                        }else {
+                        } else {
                             activity.getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.Fprofile, new LikeDispFragment(model.getPostId()))
@@ -316,6 +354,8 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
         //collect the single_row.xml data with help of ID
         ImageView userDP, postImg, likesImg, comments, save;
         TextView name, desc, likesCount, loc, time;
+        VideoView videoView;
+        ProgressBar videoProgress;
         LinearLayout profileNav;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -324,9 +364,11 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
             postImg = itemView.findViewById(R.id.postImg);
             likesImg = itemView.findViewById(R.id.likesImg);
             comments = itemView.findViewById(R.id.comments);
+            videoView = itemView.findViewById(R.id.postVideoView);
             name = itemView.findViewById(R.id.userName);
             desc = itemView.findViewById(R.id.description);
             likesCount = itemView.findViewById(R.id.likesCount);
+            videoProgress = itemView.findViewById(R.id.videoProgress);
             loc = itemView.findViewById(R.id.locHome);
             time = itemView.findViewById(R.id.time);
             save = itemView.findViewById(R.id.save);

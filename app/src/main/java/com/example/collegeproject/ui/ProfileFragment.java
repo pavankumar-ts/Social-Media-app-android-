@@ -210,11 +210,20 @@ public class ProfileFragment extends Fragment {
         //message button
         btnMsg.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
+        if (fragment == "HomeFragment"){
             activity.getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_dashboard, new MessageFragment(userId))
+                    .replace(R.id.home, new MessageFragment(userId))
                     .addToBackStack(null)
                     .commit();
+        }else {
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.Fsearch, new MessageFragment(userId))
+                    .addToBackStack(null)
+                    .commit();
+        }
+
         });
 
 

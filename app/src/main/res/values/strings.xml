@@ -36,4 +36,6 @@
     <string name="profile_of_liked_users">Profile of Liked Users</string>
     <string name="saved_post">Saved post</string>
     <string name="search_for_users">Search for users</string>
+    <string name="search">Search</string>
+    <string name="message">Message</string>
 </resources>
