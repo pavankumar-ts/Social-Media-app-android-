@@ -73,6 +73,8 @@ public class MessageListFragment extends Fragment {
         adapter.notifyDataSetChanged();
 
 
+
+
         return view;
     }
     @Override

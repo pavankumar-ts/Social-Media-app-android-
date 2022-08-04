@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="about u in one line"
+        android:hint="about you in one line"
         android:importantForAutofill="no"
         android:inputType="textShortMessage|text"
         android:minHeight="48dp"

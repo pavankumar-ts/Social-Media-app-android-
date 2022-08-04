@@ -2,6 +2,8 @@ package com.example.collegeproject.adapter;
 
 import static android.content.ContentValues.TAG;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -91,7 +96,34 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Post, HomeAdapter.MyVie
                             holder.time.setText(timedate);
 
                             //loading image URL to imageView
-                            Log.d(TAG, "image"+model.getImageUrl());
+                            if (model.getImageUrl() == null) {
+                                holder.postImg.setVisibility(View.GONE);
+                                holder.videoView.setVisibility(View.VISIBLE);
+                                holder.videoProgress.setVisibility(View.VISIBLE);
+                                String videoPath = model.getVideoUrl();
+                                Uri uri = Uri.parse(videoPath);
+                                holder.videoView.setVideoURI(uri);
+                                holder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                    @Override
+                                    public void onPrepared(MediaPlayer mp) {
+                                        mp.start();
+                                        mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+
+                                            @Override
+                                            public void onVideoSizeChanged(MediaPlayer mp, int arg1, int arg2) {
+                                                // TODO Auto-generated method stub
+                                                Log.e(TAG, "Changed");
+                                                holder.videoProgress.setVisibility(View.GONE);
+                                                mp.start();
+                                                MediaController mediaController = new MediaController(holder.itemView.getContext());
+                                                holder.videoView.setMediaController(mediaController);
+                                                mediaController.setAnchorView(holder.videoView);
+                                            }
+                                        });
+                                    }
+                                });
+
+                            }
                             Glide.with(holder.postImg.getContext()).load(model.getImageUrl()).into(holder.postImg);
                             Glide.with(holder.userDP.getContext()).load(dp).into(holder.userDP);
 
@@ -326,10 +358,13 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Post, HomeAdapter.MyVie
         ImageView userDP, postImg, likesImg, comments, save;
         TextView name, desc, likesCount, loc, time;
         LinearLayout profileNav, postView, cvPost;
-//        CardView cvPost;
+        VideoView videoView;
+        ProgressBar videoProgress;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            videoView = itemView.findViewById(R.id.postVideoView);
+            videoProgress = itemView.findViewById(R.id.videoProgress);
             userDP = itemView.findViewById(R.id.userDP);
             postImg = itemView.findViewById(R.id.postImg);
             likesImg = itemView.findViewById(R.id.likesImg);

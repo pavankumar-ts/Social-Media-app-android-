@@ -38,7 +38,6 @@ public class SearchAdapter extends FirebaseRecyclerAdapter<UserProfile, SearchAd
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull UserProfile model) {
         //fetech DP from userProfile collection
-        Log.d("TAG"," get name"+model.getName());
         Glide.with(holder.dp.getContext()).load(model.getUri()).into(holder.dp);
         holder.name.setText(model.name);
 

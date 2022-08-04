@@ -5,7 +5,9 @@ import static android.content.ContentValues.TAG;
 import static java.security.AccessController.getContext;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -20,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import com.example.collegeproject.Model.Msg;
 import com.example.collegeproject.Model.Post;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
@@ -37,6 +41,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -72,6 +77,7 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
     //likes ref
     DatabaseReference likesRef = database.getReference("likes");
     DatabaseReference saveRef = database.getReference("saved");
+    DatabaseReference postRef = database.getReference("posts");
     private DatabaseReference userProfileDB;
 
 
@@ -280,14 +286,14 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                 //open comments fragment
                 holder.comments.setOnClickListener(v -> {
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    if (fragment == "HomeFragment") {
+                    if (fragment.equals("HomeFragment")) {
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.home, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
                                 .addToBackStack(null)
                                 .commit();
                     }
-                    if (fragment == "SearchFragment") {
+                    if (fragment.equals("SearchFragment")) {
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.Fsearch, new CommentsDispFragment(model.getPostId(), "SearchFragment"), "fragments")
@@ -308,7 +314,7 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                     if (likeCheckZero != 0) {
                         //fragment switching
                         AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        if (fragment == "HomeFragment") {
+                        if (fragment.equals("HomeFragment")) {
                             activity.getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.home, new LikeDispFragment(model.getPostId()))
@@ -324,6 +330,49 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
 
                     } else {
                         Toast.makeText(v.getContext(), "zero Likes", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //delete post
+                if (Cuid.equals(model.getUserId())) {
+                    holder.deletePost.setVisibility(View.VISIBLE);
+                }
+                holder.deletePost.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder alert  = new AlertDialog.Builder(v.getContext());
+                        alert.setTitle("delete post");
+                        alert.setMessage("are you sure you want to delete this post");
+                        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                postRef.child(model.getPostId());
+                                // we are use add listerner
+                                // for event listener method
+                                // which is called with query.
+                                Query query = postRef.child(model.getPostId());
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        // remove the value at reference
+                                        dataSnapshot.getRef().removeValue();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        });
+                        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(v. getContext(), "You Clicked over No", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        AlertDialog alertDialog = alert.create();
+                        alertDialog.show();
                     }
                 });
             }
@@ -352,7 +401,7 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         //collect the single_row.xml data with help of ID
-        ImageView userDP, postImg, likesImg, comments, save;
+        ImageView userDP, postImg, likesImg, comments, save, deletePost;
         TextView name, desc, likesCount, loc, time;
         VideoView videoView;
         ProgressBar videoProgress;
@@ -373,6 +422,7 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
             time = itemView.findViewById(R.id.time);
             save = itemView.findViewById(R.id.save);
             profileNav = itemView.findViewById(R.id.profileNav);
+            deletePost = itemView.findViewById(R.id.deletePost);
 
         }
     }

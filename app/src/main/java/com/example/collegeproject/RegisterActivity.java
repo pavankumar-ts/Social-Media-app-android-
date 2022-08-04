@@ -69,8 +69,13 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
                 if (TextUtils.isEmpty(txtPhoneNo) || TextUtils.isEmpty(txtEmail) ||
                         TextUtils.isEmpty(txtPassword)) {
                     Toast.makeText(getApplicationContext(), "fill the Fields", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
                 } else if (txtPassword.length() < 6) {
                     Toast.makeText(getApplicationContext(), "short password", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                } else if (txtPhoneNo.length() != 10) {
+                    Toast.makeText(RegisterActivity.this, "invalid Phone number", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
                 } else {
                     registerUser(txtEmail, txtPassword);
                 }
@@ -79,9 +84,9 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseUser user =  mAuth.getCurrentUser();
+                FirebaseUser user = mAuth.getCurrentUser();
                 user.reload();
-                Log.d("veried?", ""+mAuth.getCurrentUser().isEmailVerified());
+                Log.d("veried?", "" + mAuth.getCurrentUser().isEmailVerified());
                 if (mAuth.getCurrentUser().isEmailVerified()) {
                     progressBar.setVisibility(View.VISIBLE);
                     addDataToDb(txtEmail, txtPhoneNo, txtPassword);
@@ -144,4 +149,15 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mAuth.getCurrentUser() != null) {
+            if (!mAuth.getCurrentUser().isEmailVerified()) {
+                mAuth.getCurrentUser().delete();
+            }
+        }
+        super.onBackPressed();
+    }
+
 }

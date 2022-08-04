@@ -10,12 +10,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.collegeproject.Model.Msg;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
+import com.example.collegeproject.ui.MessageFragment;
+import com.example.collegeproject.ui.ProfileFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -54,12 +57,12 @@ public class MsgListAdapter extends FirebaseRecyclerAdapter<UserProfile, MsgList
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Msg data = dataSnapshot.getValue(Msg.class);
-                Log.d("Tag", "data.."+data.getSender());
-                Log.d("Tag", "data.."+model.getUserId());
                 if (model.getUserId().equals(data.getSender())){
                     holder.linearLayout.setVisibility(View.VISIBLE);
                     Glide.with(holder.dp.getContext()).load(model.getUri()).into(holder.dp);
                     holder.name.setText(model.getName());
+                    holder.lastMsg.setVisibility(View.VISIBLE);
+                    holder.lastMsg.setText(data.getText());
                 }
             }
 
@@ -84,12 +87,24 @@ public class MsgListAdapter extends FirebaseRecyclerAdapter<UserProfile, MsgList
 
             // ...
         });
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                //....
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.FmsgList, new MessageFragment(model.userId), "MessageFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView dp;
-        TextView name;
+        TextView name, lastMsg;
         LinearLayout linearLayout;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -97,6 +112,7 @@ public class MsgListAdapter extends FirebaseRecyclerAdapter<UserProfile, MsgList
             dp = itemView.findViewById(R.id.Dp);
             name = itemView.findViewById(R.id.Name);
             linearLayout = itemView.findViewById(R.id.linearLayoutDp);
+            lastMsg = itemView.findViewById(R.id.lastMsg);
         }
     }
 }

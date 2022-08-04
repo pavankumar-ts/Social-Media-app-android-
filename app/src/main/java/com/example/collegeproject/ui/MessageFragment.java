@@ -58,7 +58,7 @@ public class MessageFragment extends Fragment {
 
     String RuserId;
 
-    TextView msgName;
+    TextView msgName, lastMsg;
     EditText msg;
     ImageView postMsg, msgDp;
     RecyclerView recyclerView;
@@ -101,6 +101,7 @@ public class MessageFragment extends Fragment {
         msg = view.findViewById(R.id.msgText);
         msgName = view.findViewById(R.id.msgName);
         msgDp = view.findViewById(R.id.msgDp);
+        lastMsg = view.findViewById(R.id.lastMsg);
 
 
 
