@@ -210,11 +210,19 @@ public class ProfileFragment extends Fragment {
         //message button
         btnMsg.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
-            activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.Fprofile, new MessageFragment(userId))
-                    .addToBackStack(null)
-                    .commit();
+            if (fragment == "HomeFragment") {
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.home, new MessageFragment(userId))
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.Fsearch, new MessageFragment(userId))
+                        .addToBackStack(null)
+                        .commit();
+            }
 
         });
 
@@ -262,11 +270,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    activity.getSupportFragmentManager()
-                            .beginTransaction()
-                            .add(R.id.Fprofile, new FollowersFragment(userId, Cuid, "ProfileFragment"), "ProfileFragment")
-                            .addToBackStack(null)
-                            .commit();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.Fprofile, new FollowersFragment(userId, Cuid, "ProfileFragment"), "ProfileFragment")
+                        .addToBackStack(null)
+                        .commit();
 
                 //....
 
@@ -277,27 +285,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                //....
-                if (fragment == "HomeFragment"){
-                    activity.getSupportFragmentManager()
-                            .beginTransaction()
-                            .add(R.id.home, new FollowingFragment(userId, Cuid, "HomeFragment"), "SearchFragment")
-                            .addToBackStack(null)
-                            .commit();
-                }
-            if (fragment == "SearchFragment"){
-                activity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.Fsearch, new FollowingFragment(userId, Cuid, "SearchFragment"), "SearchFragment")
-                        .addToBackStack(null)
-                        .commit();
-            }else {
                 activity.getSupportFragmentManager()
                         .beginTransaction()
                         .add(R.id.Fprofile, new FollowingFragment(userId, Cuid, "ProfileFragments"), "ProfileFragments")
                         .addToBackStack(null)
                         .commit();
-            }
             }
         });
 

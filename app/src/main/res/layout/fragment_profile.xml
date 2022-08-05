@@ -110,12 +110,13 @@
 
             <TextView
                 android:id="@+id/profileBio"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxHeight="40dp"
+                android:maxHeight="55dp"
                 android:scrollbars="vertical"
                 android:text="@string/bio"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text=" Select the image Select the image Select the image Select the image Select the image Select the image Select the image Select the image Select the image Select the image Select the image Select the image Select the image" />
 
         </LinearLayout>
 

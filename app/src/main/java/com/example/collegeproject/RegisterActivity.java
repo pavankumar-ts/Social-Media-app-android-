@@ -32,10 +32,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterActivity<mAuth> extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
     EditText phoneNo, email, password;
     Button btnRegister, btnVerify;
-    TextView loginNav;
+    TextView loginNav, tvVerify;
     ProgressBar progressBar;
     private FirebaseAuth mAuth;
     String txtPhoneNo, txtEmail, txtPassword;
@@ -56,7 +56,17 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
         password = findViewById(R.id.password);
         progressBar = findViewById(R.id.progressBarReg);
         loginNav = findViewById(R.id.loginNav);
-        loginNav.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
+        tvVerify = findViewById(R.id.tvVerify);
+
+
+        loginNav.setOnClickListener(v -> {
+            if (mAuth.getCurrentUser() != null) {
+                if (!mAuth.getCurrentUser().isEmailVerified()) {
+                    mAuth.getCurrentUser().delete();
+                }
+            }
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        });
 
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +96,6 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 user.reload();
-                Log.d("veried?", "" + mAuth.getCurrentUser().isEmailVerified());
                 if (mAuth.getCurrentUser().isEmailVerified()) {
                     progressBar.setVisibility(View.VISIBLE);
                     addDataToDb(txtEmail, txtPhoneNo, txtPassword);
@@ -137,7 +146,6 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
         Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
         intent.putExtra("tag", "register");
         startActivity(intent);
-        finish();
     }
 
     private void verify() {
@@ -145,7 +153,8 @@ public class RegisterActivity<mAuth> extends AppCompatActivity {
         mAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(RegisterActivity.this, "Verification link sent to registered Email", Toast.LENGTH_SHORT).show();
+                tvVerify.setVisibility(View.VISIBLE);
+                tvVerify.setText("verification Code is sent to your E-mail\n"+mAuth.getCurrentUser().getEmail());
             }
         });
     }

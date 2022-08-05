@@ -6,15 +6,18 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.ui.HomeFragment;
 import com.example.collegeproject.ui.LikeDispFragment;
 import com.example.collegeproject.ui.LikeDispFragment;
 import com.example.collegeproject.ui.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -26,12 +29,22 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.collegeproject.databinding.ActivityDashboardBinding;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class DashboardActivity extends AppCompatActivity {
 
     private ActivityDashboardBinding binding;
     BottomNavigationView navView;
     NavController navController;
+    private FirebaseAuth mAuth;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
 
     @Override
 
@@ -41,6 +54,27 @@ public class DashboardActivity extends AppCompatActivity {
 
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        mAuth = FirebaseAuth.getInstance();
+        String Cuid = mAuth.getCurrentUser().getUid();
+        DatabaseReference userDbRef = database.getReference().child("userProfile").child(Cuid);
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserProfile userProfile = snapshot.getValue(UserProfile.class);
+                if (userProfile == null) {
+                    mAuth.getCurrentUser().delete();
+                    startActivity(new Intent(DashboardActivity.this, RegisterActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        userDbRef.addValueEventListener(userListener);
+
 
         navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each

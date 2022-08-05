@@ -91,6 +91,7 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 UserProfile UserProfile = dataSnapshot.getValue(UserProfile.class);
+
                 name = UserProfile.getName();
                 dp = UserProfile.getUri();
 
@@ -119,10 +120,8 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                         public void onPrepared(MediaPlayer mp) {
                             mp.start();
                             mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-
                                 @Override
                                 public void onVideoSizeChanged(MediaPlayer mp, int arg1, int arg2) {
-                                    // TODO Auto-generated method stub
                                     Log.e(TAG, "Changed");
                                     holder.videoProgress.setVisibility(View.GONE);
                                     mp.start();
@@ -286,27 +285,11 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                 //open comments fragment
                 holder.comments.setOnClickListener(v -> {
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    if (fragment.equals("HomeFragment")) {
-                        activity.getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.home, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                    if (fragment.equals("SearchFragment")) {
-                        activity.getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.Fsearch, new CommentsDispFragment(model.getPostId(), "SearchFragment"), "fragments")
-                                .addToBackStack(null)
-                                .commit();
-                    } else {
-                        activity.getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.Fprofile, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
-                                .addToBackStack(null)
-                                .commit();
-                    }
-
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.Fprofile, new CommentsDispFragment(model.getPostId(), "ProfileFragment"), "fragments")
+                            .addToBackStack(null)
+                            .commit();
                 });
                 //likesCount onclickListener
                 holder.likesCount.setOnClickListener(v -> {
@@ -314,19 +297,11 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                     if (likeCheckZero != 0) {
                         //fragment switching
                         AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        if (fragment.equals("HomeFragment")) {
-                            activity.getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.home, new LikeDispFragment(model.getPostId()))
-                                    .addToBackStack("back")
-                                    .commit();
-                        } else {
-                            activity.getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.Fprofile, new LikeDispFragment(model.getPostId()))
-                                    .addToBackStack("back")
-                                    .commit();
-                        }
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.Fprofile, new LikeDispFragment(model.getPostId()))
+                                .addToBackStack("back")
+                                .commit();
 
                     } else {
                         Toast.makeText(v.getContext(), "zero Likes", Toast.LENGTH_SHORT).show();
@@ -340,7 +315,7 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                 holder.deletePost.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder alert  = new AlertDialog.Builder(v.getContext());
+                        AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
                         alert.setTitle("delete post");
                         alert.setMessage("are you sure you want to delete this post");
                         alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -368,13 +343,15 @@ public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDispla
                         alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(v. getContext(), "You Clicked over No", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), "You Clicked over No", Toast.LENGTH_SHORT).show();
                             }
                         });
                         AlertDialog alertDialog = alert.create();
                         alertDialog.show();
                     }
+
                 });
+
             }
 
             @Override

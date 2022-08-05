@@ -54,6 +54,9 @@ public class PostFragment extends Fragment {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     StorageReference storageRef;
+    private DatabaseReference userProfileDB;
+
+    UserProfile userData;
 
     Button btnAddImage, btnPost, btnAddVideo, playBtn;
     EditText desc, loc;
@@ -79,6 +82,19 @@ public class PostFragment extends Fragment {
         btnAddImage.setOnClickListener(v -> {
             selectImage();
         });
+        userProfileDB = FirebaseDatabase.getInstance().getReference().child("userProfile").child(user.getUid());
+        //adding data into Views like TextView, imageView
+        ValueEventListener profileListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userData = snapshot.getValue(UserProfile.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
         btnPost.setOnClickListener(v -> {
             String txtDesc = desc.getText().toString();
             String txtLoc = loc.getText().toString();
@@ -86,7 +102,7 @@ public class PostFragment extends Fragment {
                 Toast.makeText(getContext(), "fill the Fields", Toast.LENGTH_SHORT).show();
             }
             else if (imageUri == null && videoUri == null ){
-                Toast.makeText(getContext(), "Select the image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Select the Image/Video", Toast.LENGTH_SHORT).show();
             }
             else {
                 uplaod(txtDesc, txtLoc);
@@ -117,18 +133,19 @@ public class PostFragment extends Fragment {
         startActivityForResult(i, 100);
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && data != null && data.getData() != null) {
             imageUri = data.getData();
-            Log.d(TAG, "imageUri"+ imageUri);
+            Log.d(TAG, "imageUri" + imageUri);
             imageView.setImageURI(imageUri);
 
         }
-        if (requestCode == 10 && data != null && data.getData() != null){
+        if (requestCode == 10 && data != null && data.getData() != null) {
             videoUri = data.getData();
-            Log.d(TAG, "VideoUri"+ videoUri);
+            Log.d(TAG, "VideoUri" + videoUri);
             videoView.setVisibility(View.VISIBLE);
             videoView.setVideoURI(videoUri);
             ///.
@@ -148,16 +165,19 @@ public class PostFragment extends Fragment {
             // starts the video
             videoView.start();
         }
+        else {
+            Toast.makeText(getContext(), "ERROR", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void uplaod(String txtDesc, String txtLoc) {
 
         progressBar.setVisibility(View.VISIBLE);
         storageRef = FirebaseStorage.getInstance().getReference("postImages/" + UUID.randomUUID().toString());
-        if (imageUri != null){
+        if (imageUri != null) {
             uploadUri = imageUri;
             checkUri = "imageUri";
-        }else {
+        } else {
             uploadUri = videoUri;
             checkUri = "videoUri";
         }
@@ -174,9 +194,9 @@ public class PostFragment extends Fragment {
                                 DatabaseReference reference = database.getReference("posts");
                                 //creating unique postId
                                 String postId = reference.push().getKey();
-                                if (checkUri == "imageUri"){
-                                post.put("imageUrl", uri.toString());
-                                }else {
+                                if (checkUri == "imageUri") {
+                                    post.put("imageUrl", uri.toString());
+                                } else {
                                     post.put("videoUrl", uri.toString());
                                 }
                                 post.put("postId", postId);
@@ -197,12 +217,12 @@ public class PostFragment extends Fragment {
                         });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 

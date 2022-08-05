@@ -1,5 +1,7 @@
 package com.example.collegeproject.Model;
 
+import android.net.Uri;
+
 public class UserProfile {
     UserProfile(){
 
