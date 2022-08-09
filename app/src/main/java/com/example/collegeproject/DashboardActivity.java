@@ -1,5 +1,6 @@
 package com.example.collegeproject;
 
+import static android.content.ContentValues.TAG;
 import static java.security.AccessController.getContext;
 
 import android.app.Activity;
@@ -8,6 +9,8 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 
 import com.example.collegeproject.Model.UserProfile;
@@ -36,6 +39,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 public class DashboardActivity extends AppCompatActivity {
 
     private ActivityDashboardBinding binding;
@@ -54,6 +60,10 @@ public class DashboardActivity extends AppCompatActivity {
 
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+
+
         mAuth = FirebaseAuth.getInstance();
         String Cuid = mAuth.getCurrentUser().getUid();
         DatabaseReference userDbRef = database.getReference().child("userProfile").child(Cuid);

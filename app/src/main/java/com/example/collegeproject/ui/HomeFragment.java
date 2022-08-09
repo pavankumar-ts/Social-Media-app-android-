@@ -1,7 +1,11 @@
 package com.example.collegeproject.ui;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.collegeproject.DashboardActivity;
+import com.example.collegeproject.DenialActivity;
 import com.example.collegeproject.Model.Follow;
 import com.example.collegeproject.Model.Post;
 import com.example.collegeproject.adapter.HomeAdapter;
@@ -29,6 +35,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
@@ -49,13 +57,32 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        //time
+        Long timeStamp = System.currentTimeMillis();
+        Calendar time = Calendar.getInstance(Locale.ENGLISH);
+        time.setTimeInMillis(Long.parseLong(String.valueOf(timeStamp)));
+        String amPm = DateFormat.format("aa", timeStamp).toString().toLowerCase();
+        String hourString = (String) DateFormat.format("hh", timeStamp);
+        int hours = Integer.parseInt(hourString);
+
+        Log.d(TAG, "hours" + hours);
+        if (amPm.equals("pm")) {
+            Log.d(TAG, "amPm" + amPm);
+            if (hours < 6 || hours >= 9) {
+                Log.d(TAG, "hours" + hours);
+                startActivity(new Intent(getActivity(), DenialActivity.class));
+                getActivity().finish();
+            }
+        }
+
+
         //recyclerView
         recyclerView = binding.recycleView;
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-
 
 
         FirebaseRecyclerOptions<Post> options =

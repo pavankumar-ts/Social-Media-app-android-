@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.collegeproject.DenialActivity;
+import com.example.collegeproject.LoginActivity;
 import com.example.collegeproject.Model.Follow;
 import com.example.collegeproject.Model.Post;
 import com.example.collegeproject.Model.UserProfile;
@@ -38,7 +41,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ProfileFragment extends Fragment {
@@ -76,6 +81,26 @@ public class ProfileFragment extends Fragment {
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        //time
+        Long timeStamp = System.currentTimeMillis();
+        Calendar time = Calendar.getInstance(Locale.ENGLISH);
+        time.setTimeInMillis(Long.parseLong(String.valueOf(timeStamp)));
+
+        String amPm = DateFormat.format("aa", timeStamp).toString().toLowerCase();
+        String hourString = (String) DateFormat.format("hh", timeStamp);
+        int hours = Integer.parseInt(hourString);
+
+        Log.d(TAG, "hours" + hours);
+        if (amPm.equals("pm")) {
+            Log.d(TAG, "amPm" + amPm);
+            if (hours < 6 || hours >= 9) {
+                Log.d(TAG, "hours" + hours);
+                startActivity(new Intent(getActivity(), DenialActivity.class));
+                getActivity().finish();
+            }
+        }
+
 
         name = binding.profileName;
         dp = binding.profileDp;
@@ -204,7 +229,9 @@ public class ProfileFragment extends Fragment {
         //logout
         logout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getActivity(), StartActivity.class));
+            Intent i = new Intent(v.getContext(), LoginActivity.class);
+            startActivity(i);
+            getActivity().finish();
         });
 
         //message button

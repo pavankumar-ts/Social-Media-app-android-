@@ -1,5 +1,8 @@
 package com.example.collegeproject.ui;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +21,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.collegeproject.DenialActivity;
 import com.example.collegeproject.Model.Likes;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.adapter.SearchAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class SearchFragment extends Fragment {
 
@@ -41,6 +49,28 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         EditText text = view.findViewById(R.id.etSearch);
         ImageView icon = view.findViewById(R.id.iconSearch);
+
+
+        //time
+        Long timeStamp = System.currentTimeMillis();
+        Calendar time = Calendar.getInstance(Locale.ENGLISH);
+        time.setTimeInMillis(Long.parseLong(String.valueOf(timeStamp)));
+
+        String amPm = DateFormat.format("aa", timeStamp).toString().toLowerCase();
+        String hourString = (String) DateFormat.format("hh", timeStamp);
+        int hours = Integer.parseInt(hourString);
+
+        Log.d(TAG, "hours" + hours);
+        if (amPm.equals("pm")) {
+            Log.d(TAG, "amPm" + amPm);
+            if (hours < 6 || hours >= 9) {
+                Log.d(TAG, "hours" + hours);
+                startActivity(new Intent(getActivity(), DenialActivity.class));
+                getActivity().finish();
+            }
+        }
+
+
         recyclerView = view.findViewById(R.id.rvSearch);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

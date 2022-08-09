@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.collegeproject.DashboardActivity;
+import com.example.collegeproject.DenialActivity;
 import com.example.collegeproject.Model.UserProfile;
 import com.example.collegeproject.R;
 import com.example.collegeproject.databinding.FragmentPostBinding;
@@ -41,7 +43,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -70,6 +74,27 @@ public class PostFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentPostBinding.inflate(inflater, container, false);
+
+        //time
+        Long timeStamp = System.currentTimeMillis();
+        Calendar time = Calendar.getInstance(Locale.ENGLISH);
+        time.setTimeInMillis(Long.parseLong(String.valueOf(timeStamp)));
+
+        String amPm = DateFormat.format("aa", timeStamp).toString().toLowerCase();
+        String hourString = (String) DateFormat.format("hh", timeStamp);
+        int hours = Integer.parseInt(hourString);
+
+        Log.d(TAG, "hours" + hours);
+        if (amPm.equals("pm")) {
+            Log.d(TAG, "amPm" + amPm);
+            if (hours < 6 || hours >= 9) {
+                Log.d(TAG, "hours" + hours);
+                startActivity(new Intent(getActivity(), DenialActivity.class));
+                getActivity().finish();
+            }
+        }
+
+
         View root = binding.getRoot();
         btnAddImage = binding.btnAddImage;
         btnPost = binding.btnPost;
@@ -165,9 +190,6 @@ public class PostFragment extends Fragment {
             // starts the video
             videoView.start();
         }
-        else {
-            Toast.makeText(getContext(), "ERROR", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void uplaod(String txtDesc, String txtLoc) {
@@ -220,7 +242,6 @@ public class PostFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
