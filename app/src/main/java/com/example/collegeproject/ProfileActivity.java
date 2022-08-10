@@ -110,6 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(ProfileActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
             }
         };
+        userDB.addValueEventListener(userData);
 
 
 
