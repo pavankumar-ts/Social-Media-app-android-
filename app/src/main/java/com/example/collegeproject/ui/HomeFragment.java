@@ -17,22 +17,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.collegeproject.DashboardActivity;
+
 import com.example.collegeproject.DenialActivity;
-import com.example.collegeproject.Model.Follow;
+
 import com.example.collegeproject.Model.Post;
+import com.example.collegeproject.StartActivity;
 import com.example.collegeproject.adapter.HomeAdapter;
 import com.example.collegeproject.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,9 +41,7 @@ public class HomeFragment extends Fragment {
 
     //current user
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String Cuid = user.getUid();
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -60,21 +53,22 @@ public class HomeFragment extends Fragment {
 
         //time
         Long timeStamp = System.currentTimeMillis();
-        Calendar time = Calendar.getInstance(Locale.ENGLISH);
-        time.setTimeInMillis(Long.parseLong(String.valueOf(timeStamp)));
+
         String amPm = DateFormat.format("aa", timeStamp).toString().toLowerCase();
         String hourString = (String) DateFormat.format("hh", timeStamp);
         int hours = Integer.parseInt(hourString);
-
-        Log.d(TAG, "hours" + hours);
-        if (amPm.equals("pm")) {
-            Log.d(TAG, "amPm" + amPm);
-            if (hours < 6 || hours >= 9) {
-                Log.d(TAG, "hours" + hours);
-                startActivity(new Intent(getActivity(), DenialActivity.class));
-                getActivity().finish();
-            }
-        }
+//        if (amPm.equals("am")){
+//            startActivity(new Intent(getActivity(), DenialActivity.class));
+//            Log.d(TAG, "hoursStart" + hours);
+//        }
+//        if (amPm.equals("pm")) {
+//            Log.d(TAG, "amPm" + amPm);
+//            if (hours < 6 || hours >= 9) {
+//                Log.d(TAG, "hours" + hours);
+//                startActivity(new Intent(getActivity(), DenialActivity.class));
+//                getActivity().finish();
+//            }
+//        }
 
 
         //recyclerView
@@ -83,8 +77,7 @@ public class HomeFragment extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
-
-
+        recyclerView.setHasFixedSize(true);
         FirebaseRecyclerOptions<Post> options =
                 new FirebaseRecyclerOptions.Builder<Post>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("posts"), Post.class)

@@ -60,9 +60,6 @@ import java.util.Map;
 
 public class PostDisplayAdapter extends FirebaseRecyclerAdapter<Post, PostDisplayAdapter.MyViewHolder> {
     String fragment;
-    //fragments
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
     String name, dp;
 
     public PostDisplayAdapter(@NonNull FirebaseRecyclerOptions<Post> options, String fragment) {

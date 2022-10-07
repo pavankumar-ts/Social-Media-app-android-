@@ -74,16 +74,19 @@ public class MessageListFragment extends Fragment {
         String amPm = DateFormat.format("aa", timeStamp).toString().toLowerCase();
         String hourString = (String) DateFormat.format("hh", timeStamp);
         int hours = Integer.parseInt(hourString);
-
-        Log.d(TAG, "hours" + hours);
+        if (amPm.equals("am")){
+            startActivity(new Intent(getActivity(), DenialActivity.class));
+            Log.d(TAG, "hoursStart" + hours);
+        }
+        /*Log.d(TAG, "hours" + hours);
         if (amPm.equals("pm")) {
             Log.d(TAG, "amPm" + amPm);
-            if (hours < 6 || hours >= 9) {
+            if (hours < 6 || hours >=9) {
                 Log.d(TAG, "hours" + hours);
                 startActivity(new Intent(getActivity(), DenialActivity.class));
                 getActivity().finish();
             }
-        }
+        }*/
 
 
         recyclerView = view.findViewById(R.id.rvMessage);

@@ -344,6 +344,14 @@ public class HomeAdapter extends FirebaseRecyclerAdapter<Post, HomeAdapter.MyVie
         ///..
 
     }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+    @Override
+    public int getItemCount() {
+        return super.getItemCount();
+    }
 
     @NonNull
     @Override

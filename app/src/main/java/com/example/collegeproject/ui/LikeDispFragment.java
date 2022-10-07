@@ -86,7 +86,8 @@ public class LikeDispFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         FirebaseRecyclerOptions<Likes> options =
                 new FirebaseRecyclerOptions.Builder<Likes>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("likes").orderByChild("postId").equalTo(postId), Likes.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("likes")
+                                .orderByChild("postId").equalTo(postId), Likes.class)
                         .build();
 
         adapter = new LikesAdapter(options);

@@ -5,8 +5,6 @@ public class Post {
 
     }
 
-
-
     public String getDescriptionText() {
         return descriptionText;
     }

@@ -21,7 +21,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     EditText email;
@@ -41,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         registerNav = findViewById(R.id.registerNav);
         progressBar = findViewById(R.id.progressBarLogin);
+
         btnLogin.setOnClickListener(v -> {
             String txtEmail = email.getText().toString().trim();
             String txtPassword = password.getText().toString();
@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in  success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             finish();

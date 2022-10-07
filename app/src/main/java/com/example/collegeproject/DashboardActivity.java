@@ -46,7 +46,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     private ActivityDashboardBinding binding;
     BottomNavigationView navView;
-    NavController navController;
     private FirebaseAuth mAuth;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -60,9 +59,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-
-
 
         mAuth = FirebaseAuth.getInstance();
         String Cuid = mAuth.getCurrentUser().getUid();
